@@ -36,6 +36,9 @@ jobs:
         #tags: serwol2/openmeetingsps:feature
         tags: ghcr.io/serwol2/openmeetings:feature
         build-args: BUILD_TYPE=full
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.MY_GITHUB_TOKEN1 }}
 
  
  
