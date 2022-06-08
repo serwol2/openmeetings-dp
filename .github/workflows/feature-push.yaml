@@ -23,13 +23,13 @@ jobs:
         username: serwol2 #${{ github.actor }}
         password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
-    
-    # - name: Build and push docker image
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     # context: .
-    #     push: true
-    #     tags: ghcr.io/serwol2/app:latest
+
+    - name: Build and push docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ghcr.io/serwol2/openmeetings:feature
  
  
  
