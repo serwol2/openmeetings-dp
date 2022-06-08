@@ -33,7 +33,7 @@ jobs:
         #context: .
         file: ./Dockerfile
         push: true
-        tags: serwol2/openmeetings-ps:feature
+        tags: serwol2/openmeetings_ps:feature
         build-args: BUILD_TYPE=full 
  
  
