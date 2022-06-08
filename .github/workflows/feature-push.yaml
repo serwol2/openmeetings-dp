@@ -35,8 +35,8 @@ jobs:
         push: true
         #tags: serwol2/openmeetingsps:feature
         tags: ghcr.io/serwol2/om:feature
-        build-args: BUILD_TYPE=full 
- 
+        build-args: BUILD_TYPE="full"
+
  
  
   # send-email:
