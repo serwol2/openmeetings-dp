@@ -16,11 +16,14 @@ jobs:
     name: build-docker-image
     runs-on: ubuntu-latest  
     steps:      
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
-        username: serwol2 #${{ github.actor }}
+        username: {{ github.actor }}
         password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
 
@@ -30,7 +33,7 @@ jobs:
         #context: .
         file: ./Dockerfile
         push: true
-        tags: ghcr.io/serwol2/openmeetings:feature
+        tags: serwol2/openmeetings-ps:feature
         build-args: BUILD_TYPE=full 
  
  
