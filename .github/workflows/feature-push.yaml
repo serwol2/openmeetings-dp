@@ -27,10 +27,11 @@ jobs:
     - name: Build and push docker image
       uses: docker/build-push-action@v2
       with:
-        # context: .
+        context: .
+        file: ./Dockerfile
         push: true
-        tags: ghcr.io/serwol2/openmeetings-dp:feature
-        build-args: BUILD_TYPE=full
+        tags: ghcr.io/serwol2/openmeetings:feature
+        build-args: [ BUILD_TYPE=full ] 
  
  
  
