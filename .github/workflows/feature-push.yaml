@@ -29,7 +29,8 @@ jobs:
       with:
         # context: .
         push: true
-        tags: ghcr.io/serwol2/openmeetings:feature
+        tags: ghcr.io/serwol2/openmeetings-dp:feature
+        build-args: BUILD_TYPE=full
  
  
  
