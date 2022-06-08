@@ -26,19 +26,32 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
-
-    - name: Build and push docker image
-      uses: docker/build-push-action@v2
+    - name: Build & Push to GitHub Package
+      uses: opspresso/action-docker@master
       with:
-        #context: .
-        #file: ./Dockerfile
-        push: true
-        #tags: serwol2/openmeetingsps:feature
-        tags: ghcr.io/serwol2/openmeetings:feature
-        build-args: BUILD_TYPE=full
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+        args: --docker
+      env:
+        PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+        REGISTRY: "docker.pkg.github.com"
+        TAG_NAME: "v0.0.1"
+        DOCKERFILE: ./Dockerfile
+        DOCKER_BUILD_ARGS: BUILD_TYPE=full
+
+
+
+
+    # - name: Build and push docker image
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     #context: .
+    #     #file: ./Dockerfile
+    #     push: true
+    #     #tags: serwol2/openmeetingsps:feature
+    #     tags: ghcr.io/serwol2/openmeetings:feature
+    #     build-args: BUILD_TYPE=full
+    #     registry: ghcr.io
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.MY_GITHUB_TOKEN1 }}
 
  
  
