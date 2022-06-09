@@ -28,7 +28,7 @@ jobs:
     
     - uses: hadolint/hadolint-action@v2.0.0
       with:
-      dockerfile: Dockerfile
+          dockerfile: Dockerfile
 
     # - name: lint-dockerfile
     #   uses: luke142367/Docker-Lint-Action@v1.0.0
