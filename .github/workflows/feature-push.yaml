@@ -33,12 +33,13 @@ jobs:
       env:
         PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
         REGISTRY: "docker.pkg.github.com"
-        TAG_NAME: "v0.0.1"
+        TAG_NAME: "feature-v1.0.0"
         #DOCKERFILE: ./Dockerfile
         DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
+        IMAGE_NAME: openmeetings-dp
 
 
-
+# https://localhost:5443/openmeetings/install?2  попробовать
 
     # - name: Build and push docker image
     #   uses: docker/build-push-action@v2
