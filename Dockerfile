@@ -45,9 +45,9 @@ ENV PORTS=5443
 ENV SERVER_TZ=UTC
 
 WORKDIR ${OM_HOME}
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt install -y --no-install-recommends \
     apt-utils \
-  && apt-get install -y --no-install-recommends \
+  && apt install -y --no-install-recommends \
     software-properties-common \
     gnupg2 \
     dirmngr \
