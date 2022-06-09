@@ -19,19 +19,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+    # - name: Login to GitHub Container Registry
+    #   uses: docker/login-action@v1
+    #   with:
+    #     registry: ghcr.io
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
     - name: lint-dockerfile
       uses: luke142367/Docker-Lint-Action@v1.0.0
       with:
         target: Dockerfile
       env:
-        GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1 }} 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
 
   docker-build-and-push:
