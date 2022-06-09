@@ -26,9 +26,9 @@ jobs:
     #     username: ${{ github.actor }}
     #     password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
-    - uses: hadolint/hadolint-action@v2.0.0
-      with:
-          dockerfile: Dockerfile
+    # - uses: hadolint/hadolint-action@v2.0.0     # !!!!
+    #   with:
+    #       dockerfile: Dockerfile
 
     # - name: lint-dockerfile
     #   uses: luke142367/Docker-Lint-Action@v1.0.0
@@ -60,17 +60,17 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
-    # - name: Build & Push to GitHub Package 
-    #   uses: opspresso/action-docker@master   # This is the slow version.
-    #   with:
-    #     args: --docker
-    #   env:
-    #     PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
-    #     REGISTRY: "docker.pkg.github.com"
-    #     TAG_NAME: "feature-v1.0.0"
-    #     #DOCKERFILE: ./Dockerfile
-    #     DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
-    #     IMAGE_NAME: openmeetings-dp
+    - name: Build & Push to GitHub Package 
+      uses: opspresso/action-docker@master   # This is the slow version.
+      with:
+        args: --docker
+      env:
+        PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+        REGISTRY: "docker.pkg.github.com"
+        TAG_NAME: "feature-v1.0.0"
+        #DOCKERFILE: ./Dockerfile
+        DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
+        IMAGE_NAME: openmeetings-dp
 
 
 # https://localhost:5443/openmeetings/install?2  попробовать
