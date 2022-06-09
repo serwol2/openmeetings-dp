@@ -26,33 +26,31 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
-    - name: Build & Push to GitHub Package
-      uses: opspresso/action-docker@master
-      with:
-        args: --docker
-      env:
-        PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
-        REGISTRY: "docker.pkg.github.com"
-        TAG_NAME: "feature-v1.0.0"
-        #DOCKERFILE: ./Dockerfile
-        DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
-        IMAGE_NAME: openmeetings-dp
+    # - name: Build & Push to GitHub Package
+    #   uses: opspresso/action-docker@master
+    #   with:
+    #     args: --docker
+    #   env:
+    #     PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+    #     REGISTRY: "docker.pkg.github.com"
+    #     TAG_NAME: "feature-v1.0.0"
+    #     #DOCKERFILE: ./Dockerfile
+    #     DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
+    #     IMAGE_NAME: openmeetings-dp
 
 
 # https://localhost:5443/openmeetings/install?2  попробовать
 
-    # - name: Build and push docker image
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     #context: .
-    #     #file: ./Dockerfile
-    #     push: true
-    #     #tags: serwol2/openmeetingsps:feature
-    #     tags: ghcr.io/serwol2/openmeetings:feature
-    #     build-args: BUILD_TYPE=full
-    #     registry: ghcr.io
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+    - name: Build and push docker image
+      uses: docker/build-push-action@v3
+      with:
+        #context: .
+        #file: ./Dockerfile
+        push: true
+        #tags: serwol2/openmeetingsps:feature
+        tags: ghcr.io/serwol2/openmeetings:feature
+        build-args: BUILD_TYPE=full
+    
 
  
  
