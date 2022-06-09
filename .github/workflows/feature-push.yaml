@@ -18,6 +18,14 @@ jobs:
     steps: 
     - name: Checkout
       uses: actions/checkout@v3
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+    
     - name: lint-dockerfile
       uses: luke142367/Docker-Lint-Action@v1.0.0
       with:
@@ -25,17 +33,20 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1 }} 
 
+
   docker-build-and-push:
     name: build-docker-image
     runs-on: ubuntu-latest  
+    needs: 
+      - lint-dockerfile
     steps:      
     # - name: Checkout repository
     #   uses: actions/checkout@v3
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+    # - name: Set up QEMU
+    #   uses: docker/setup-qemu-action@v2
+    # - name: Set up Docker Buildx
+    #   uses: docker/setup-buildx-action@v2
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
@@ -44,27 +55,27 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.MY_GITHUB_TOKEN1 }}
     
-    # - name: Build & Push to GitHub Package 
-    #   uses: opspresso/action-docker@master   # This is the slow version.
-    #   with:
-    #     args: --docker
-    #   env:
-    #     PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
-    #     REGISTRY: "docker.pkg.github.com"
-    #     TAG_NAME: "feature-v1.0.0"
-    #     #DOCKERFILE: ./Dockerfile
-    #     DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
-    #     IMAGE_NAME: openmeetings-dp
+    - name: Build & Push to GitHub Package 
+      uses: opspresso/action-docker@master   # This is the slow version.
+      with:
+        args: --docker
+      env:
+        PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+        REGISTRY: "docker.pkg.github.com"
+        TAG_NAME: "feature-v1.0.0"
+        #DOCKERFILE: ./Dockerfile
+        DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
+        IMAGE_NAME: openmeetings-dp
 
 
 # https://localhost:5443/openmeetings/install?2  попробовать
 
-    - name: Build and push docker image  
-      uses: docker/build-push-action@v3   # This is the fast version.
-      with:
-        push: true
-        tags: ghcr.io/serwol2/openmeetingsdp:feature
-        build-args: BUILD_TYPE=full
+    # - name: Build and push docker image  
+    #   uses: docker/build-push-action@v3   # This is the fast version.
+    #   with:
+    #     push: true
+    #     tags: ghcr.io/serwol2/openmeetingsdp:feature
+    #     build-args: BUILD_TYPE=full
     
 
  
