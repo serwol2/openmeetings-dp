@@ -1,3 +1,33 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@serwol2 
+openmeetings
+/
+openmeetings-docker
+Public
+Code
+Issues
+2
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+openmeetings-docker/Dockerfile
+This commit does not belong to any branch on this repository, and may belong to a fork outside of the repository.
+@solomax
+solomax 6.3.0 release
+Latest commit 365d4e7 23 days ago
+ History
+ 1 contributor
+101 lines (91 sloc)  3.48 KB
+  
 # #############################################
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,15 +44,13 @@
 
 FROM ubuntu:18.04
 ENV OM_VER_MAJ='6'
-ENV OM_VER_MIN='2'
+ENV OM_VER_MIN='3'
 ENV OM_VER_MIC='0'
 ENV OM_VERSION="${OM_VER_MAJ}.${OM_VER_MIN}.${OM_VER_MIC}"
 LABEL vendor="Apache OpenMeetings dev team"
 LABEL version="${OM_VERSION}"
 LABEL maintainer=dev@openmeetings.apache.org
 
-ARG BUILD_TYPE="min"
-ENV OM_TYPE=${BUILD_TYPE}
 ENV DB_ROOT_PASS '12345'
 ENV OM_USER="om_admin"
 ENV OM_PASS="1Q2w3e4r5t^y"
@@ -41,17 +69,13 @@ ENV TURN_PASS=""
 ENV OM_DATA_DIR="/opt/omdata"
 ENV work=/opt
 ENV OM_HOME=/opt/openmeetings
-ENV MYSQL_J_VER="8.0.27"
-ENV DB2_J_VER="11.5.6.0"
+ENV MYSQL_J_VER="8.0.29"
+ENV DB2_J_VER="11.5.7.0"
 ENV PORTS=5443
 ENV SERVER_TZ=UTC
 
 WORKDIR ${OM_HOME}
-RUN cat /etc/issue \
-  \
-  && echo "OM server of type ${OM_TYPE} will be built" \
-  \
-  && apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
   && apt-get install -y --no-install-recommends \
     software-properties-common \
@@ -78,7 +102,7 @@ RUN cat /etc/issue \
                      hkp://pgp.mit.edu:80 \
                      hkp://keyserver.pgp.com:80 \
     ; do \
-      gpg --keyserver "$server" --recv-keys 93A30395 && break || echo "Trying new server..." \
+      gpg --keyserver "$server" --recv-keys 8456901E && break || echo "Trying new server..." \
     ; done \
   && gpg --batch --verify ${work}/om.asc ${work}/om.tar.gz \
   && tar -xzf ${work}/om.tar.gz --strip-components=1 -C ${OM_HOME}/ \
@@ -90,10 +114,31 @@ RUN cat /etc/issue \
 WORKDIR ${work}
 COPY scripts/*.sh ./
 
-RUN chmod a+x ${work}/*.sh \
+RUN chmod a+x ${work}/*.sh
+
+ARG BUILD_TYPE="min"
+ENV OM_TYPE=${BUILD_TYPE}
+
+RUN cat /etc/issue \
+  \
+  && echo "OM server of type ${OM_TYPE} will be built" \
+  \
   && ./om_install.sh
 
 EXPOSE ${PORTS}
 
 ENTRYPOINT [ "bash", "-c", "${work}/om.sh" ]
 
+© 2022 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
