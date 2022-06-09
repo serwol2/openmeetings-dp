@@ -32,6 +32,7 @@ jobs:
         target: Dockerfile
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        target: Yes
 
 
   docker-build-and-push:
