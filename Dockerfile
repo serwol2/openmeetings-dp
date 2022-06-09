@@ -1,33 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@serwol2 
-openmeetings
-/
-openmeetings-docker
-Public
-Code
-Issues
-2
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-openmeetings-docker/Dockerfile
-This commit does not belong to any branch on this repository, and may belong to a fork outside of the repository.
-@solomax
-solomax 6.3.0 release
-Latest commit 365d4e7 23 days ago
- History
- 1 contributor
-101 lines (91 sloc)  3.48 KB
-  
 # #############################################
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
