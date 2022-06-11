@@ -67,7 +67,7 @@ jobs:
           env:
             PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
             REGISTRY: "docker.pkg.github.com"
-            TAG_NAME: "feature-v3.0.0-fulloldver"
+            TAG_NAME: "feature-v4.0.0-full-old-ver+JConnector"
             #DOCKERFILE: ./Dockerfile
             DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
             IMAGE_NAME: openmeetings-dp

@@ -79,12 +79,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf ${GNUPGHOME} ${work}/om.asc ${work}/om.tar.gz \
   && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/${MYSQL_J_VER}/mysql-connector-java-${MYSQL_J_VER}.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
   && wget https://repo1.maven.org/maven2/com/ibm/db2/jcc/${DB2_J_VER}/jcc-${DB2_J_VER}.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
-  && sed -i 's|<policy domain="coder" rights="none" pattern="PS" />|<!--policy domain="coder" rights="none" pattern="PS" />|g; s|<policy domain="coder" rights="none" pattern="XPS" />|<policy domain="coder" rights="none" pattern="XPS" /-->|g' /etc/ImageMagick-6/policy.xml
+  && sed -i 's|<policy domain="coder" rights="none" pattern="PS" />|<!--policy domain="coder" rights="none" pattern="PS" />|g; s|<policy domain="coder" rights="none" pattern="XPS" />|<policy domain="coder" rights="none" pattern="XPS" /-->|g' /etc/ImageMagick-6/policy.xml \
+  && wget wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.pom -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
+  && wget wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib
 
 WORKDIR ${work}
 COPY scripts/*.sh ./
 
-RUN chmod a+x ${work}/*.sh
+RUN chmod a+x ${work}/*.shdebconf-set-selections
 
 ARG BUILD_TYPE="min"
 ENV OM_TYPE=${BUILD_TYPE}
