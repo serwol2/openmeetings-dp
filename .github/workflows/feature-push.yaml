@@ -69,7 +69,7 @@ jobs:
             REGISTRY: "docker.pkg.github.com"
             TAG_NAME: "feature-v2.0.0-oldver"
             #DOCKERFILE: ./Dockerfile
-            DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
+            DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=min
             IMAGE_NAME: openmeetings-dp
 
 
