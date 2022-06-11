@@ -48,8 +48,8 @@ docker run -p 5443:5443 \
   -e OM_DB_HOST=om-database1.clonpmy54vhs.us-east-1.rds.amazonaws.com \
   -e OM_DB_USER=sergey \
   -e OM_DB_PASS=samsung-1 \
-  --mount type=bind,source=/opt/omdata,target=/opt/omdata \
-  -it ghcr.io/serwol2/openmeetings-dp/openmeetings-dp:feature-v1.0.0
+  --mount type=bind,source=/opt/omdata,target=/opt/omdata \                    # вот это нафиг не надо
+  -it ghcr.io/serwol2/openmeetings-dp/openmeetings-dp:feature-v2.0.0-oldver
 
 > Please Specify `TURN*` parameters in case users from other networks are expected
 
