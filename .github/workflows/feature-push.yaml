@@ -39,38 +39,38 @@ jobs:
     #     target: Yes
 
 
-    docker-build-and-push:
-    name: build-docker-image
-    runs-on: ubuntu-latest  
-    # needs: 
-    #   - lint-dockerfile
-    steps:      
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      docker-build-and-push:
+        name: build-docker-image
+        runs-on: ubuntu-latest  
+        # needs: 
+        #   - lint-dockerfile
+        steps:      
+        - name: Checkout repository
+          uses: actions/checkout@v3
 
     # - name: Set up QEMU
     #   uses: docker/setup-qemu-action@v2
     # - name: Set up Docker Buildx
     #   uses: docker/setup-buildx-action@v2
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.MY_GITHUB_TOKEN1 }}
-    
-    - name: Build & Push to GitHub Package 
-      uses: opspresso/action-docker@master   # This is the slow version.
-      with:
-        args: --docker
-      env:
-        PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
-        REGISTRY: "docker.pkg.github.com"
-        TAG_NAME: "feature-v2.0.0-oldver"
-        #DOCKERFILE: ./Dockerfile
-        DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
-        IMAGE_NAME: openmeetings-dp
+        - name: Login to GitHub Container Registry
+          uses: docker/login-action@v1
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+        
+        - name: Build & Push to GitHub Package 
+          uses: opspresso/action-docker@master   # This is the slow version.
+          with:
+            args: --docker
+          env:
+            PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+            REGISTRY: "docker.pkg.github.com"
+            TAG_NAME: "feature-v2.0.0-oldver"
+            #DOCKERFILE: ./Dockerfile
+            DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full
+            IMAGE_NAME: openmeetings-dp
 
 
 # https://localhost:5443/openmeetings/install?2  попробовать
