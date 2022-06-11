@@ -1,4 +1,5 @@
 # #############################################
+# && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/${MYSQL_J_VER}/mysql-connector-java-${MYSQL_J_VER}.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -77,11 +78,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && gpg --batch --verify ${work}/om.asc ${work}/om.tar.gz \
   && tar -xzf ${work}/om.tar.gz --strip-components=1 -C ${OM_HOME}/ \
   && rm -rf ${GNUPGHOME} ${work}/om.asc ${work}/om.tar.gz \
-  && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/${MYSQL_J_VER}/mysql-connector-java-${MYSQL_J_VER}.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
+  && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.pom -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
+  && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
   && wget https://repo1.maven.org/maven2/com/ibm/db2/jcc/${DB2_J_VER}/jcc-${DB2_J_VER}.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
   && sed -i 's|<policy domain="coder" rights="none" pattern="PS" />|<!--policy domain="coder" rights="none" pattern="PS" />|g; s|<policy domain="coder" rights="none" pattern="XPS" />|<policy domain="coder" rights="none" pattern="XPS" /-->|g' /etc/ImageMagick-6/policy.xml \
-  && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.pom -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
-  && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib
 
 WORKDIR ${work}
 COPY scripts/*.sh ./
