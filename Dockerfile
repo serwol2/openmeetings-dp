@@ -13,9 +13,9 @@
 # limitations under the License.
 # #############################################
 
-FROM ubuntu:18.04
-ENV OM_VER_MAJ='5'
-ENV OM_VER_MIN='0'
+FROM ubuntu:20.04
+ENV OM_VER_MAJ='6'
+ENV OM_VER_MIN='3'
 ENV OM_VER_MIC='0'
 ENV OM_VERSION="${OM_VER_MAJ}.${OM_VER_MIN}.${OM_VER_MIC}"
 LABEL vendor="Apache OpenMeetings dev team"
@@ -78,7 +78,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && gpg --batch --verify ${work}/om.asc ${work}/om.tar.gz \
   && tar -xzf ${work}/om.tar.gz --strip-components=1 -C ${OM_HOME}/ \
   && rm -rf ${GNUPGHOME} ${work}/om.asc ${work}/om.tar.gz \
-  && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.pom -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
   && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
   && wget https://repo1.maven.org/maven2/com/ibm/db2/jcc/${DB2_J_VER}/jcc-${DB2_J_VER}.jar -P ${OM_HOME}/webapps/openmeetings/WEB-INF/lib \
   && sed -i 's|<policy domain="coder" rights="none" pattern="PS" />|<!--policy domain="coder" rights="none" pattern="PS" />|g; s|<policy domain="coder" rights="none" pattern="XPS" />|<policy domain="coder" rights="none" pattern="XPS" /-->|g' /etc/ImageMagick-6/policy.xml \
