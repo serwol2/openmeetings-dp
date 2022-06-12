@@ -48,7 +48,7 @@ if [ "${OM_TYPE}" != "min" ]; then
 	ls -la
 	sudo -u ${DAEMON_USER} ./admin.sh -v -i -tz Europe/Berlin -email your.email@gmail.com -group group \
 		-user ${OM_USER} --password ${OM_PASS} \
-		--db-type mysql --db-host localhost --db-name ${OM_DB_NAME} \
+		--db-type mysql --db-host ${OM_DB_HOST} --db-name ${OM_DB_NAME} \
 		--db-user ${OM_DB_USER} --db-pass ${OM_DB_PASS}
 fi
 
