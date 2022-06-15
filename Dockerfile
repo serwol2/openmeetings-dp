@@ -46,7 +46,7 @@ ENV SERVER_TZ=UTC
 
 WORKDIR ${OM_HOME}
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-utils=latest \
+    apt-utils=2.5.0 \
   && apt-get install -y --no-install-recommends \
     software-properties-common=latest \
     gnupg2=latest \
