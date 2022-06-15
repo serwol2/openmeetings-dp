@@ -59,7 +59,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sox=latest \
     sudo=latest \
     openjdk-17-jre=latest \
-    && apt-get clean
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get install -y --no-install-recommends \
     libreoffice=latest \
