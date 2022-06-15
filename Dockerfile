@@ -45,26 +45,27 @@ ENV PORTS=5443
 ENV SERVER_TZ=UTC
 
 WORKDIR ${OM_HOME}
+# hadolint ignore=DL3006
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-utils=1.6.14 \
+    apt-utils \
   && apt-get install -y --no-install-recommends \
-    software-properties-common=0.99.9.8 \
-    gnupg2= \
-    dirmngr=2.2.35-2 \
-    unzip=6.0-25ubuntu1 \
-    wget=1.20.3-1ubuntu2 \
-    ghostscript=latest \
-    libgs-dev=latest \
-    imagemagick=latest \
-    sox=latest \
-    sudo=latest \
-    openjdk-17-jre=latest \
+    software-properties-common \
+    gnupg2 \
+    dirmngr \
+    unzip \
+    wget \
+    ghostscript \
+    libgs-dev \
+    imagemagick \
+    sox \
+    sudo \
+    openjdk-17-jre \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get install -y --no-install-recommends \
-    libreoffice=latest \
-    ffmpeg=latest \
+    libreoffice \
+    ffmpeg \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   \
