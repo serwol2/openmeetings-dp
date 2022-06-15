@@ -49,7 +49,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils=1.6.14 \
   && apt-get install -y --no-install-recommends \
     software-properties-common=0.99.9.8 \
-    gnupg2=. \
+    gnupg2= \
     dirmngr=2.2.35-2 \
     unzip=6.0-25ubuntu1 \
     wget=1.20.3-1ubuntu2 \
