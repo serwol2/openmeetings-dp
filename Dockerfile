@@ -46,23 +46,23 @@ ENV SERVER_TZ=UTC
 
 WORKDIR ${OM_HOME}
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-utils \
+    apt-utils:latest \
   && apt-get install -y --no-install-recommends \
-    software-properties-common \
-    gnupg2 \
-    dirmngr \
-    unzip \
-    wget \
-    ghostscript \
-    libgs-dev \
-    imagemagick \
-    sox \
-    sudo \
-    openjdk-17-jre
+    software-properties-common:latest \
+    gnupg2:latest \
+    dirmngr:latest \
+    unzip:latest \
+    wget:latest \
+    ghostscript:latest \
+    libgs-dev:latest \
+    imagemagick:latest \
+    sox:latest \
+    sudo:latest \
+    openjdk-17-jre:latest
 
 RUN apt-get install -y --no-install-recommends \
-    libreoffice \
-    ffmpeg \
+    libreoffice:latest \
+    ffmpeg:latest \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   \
