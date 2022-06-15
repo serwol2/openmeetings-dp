@@ -6,114 +6,76 @@ on:
      - feature
     # path:
     #   - terraform/**
-# env:
-#   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
-#   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
-  #GITHUB_TOKEN: ${{secrets.GITH_TOKEN}}
+env:
+  AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
+  AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
+  GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
   #REGISTRY: ghcr.io
 jobs:
-  # lint-dockerfile:           #хороший линтер
-  #   name: lint-dockerfile
-  #   runs-on: ubuntu-latest
-  #   steps: 
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
+    ######################### LINTERS ###################################
+
+    lint-dockerfile:           #хороший линтер
+      name: lint-dockerfile
+      runs-on: ubuntu-latest
+      steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
     
-    # - name: Login to GitHub Container Registry
-    #   uses: docker/login-action@v1
-    #   with:
-    #     registry: ghcr.io
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ GITHUB_TOKEN }}
     
-    # - uses: hadolint/hadolint-action@v2.0.0     # !!!!
-    #   with:
-    #       dockerfile: Dockerfile
+      - uses: hadolint/hadolint-action@v2.0.0     # !!!!
+        with:
+            dockerfile: Dockerfile
 
-    # - name: lint-dockerfile
-    #   uses: luke142367/Docker-Lint-Action@v1.0.0
-    #   with:
-    #     target: Dockerfile
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-    #     target: Yes
+      - name: lint-dockerfile
+        uses: luke142367/Docker-Lint-Action@v1.0.0
+        with:
+          target: Dockerfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          target: Yes
+    ######################### LINTERS ###################################
 
+     
+    ######################### Create docker image ###################################
+      # docker-build-and-push:
+      #   name: build-docker-image
+      #   runs-on: ubuntu-latest  
+      #   # needs: 
+      #   #   - lint-dockerfile
+      #   steps:      
+      #   - name: Checkout repository
+      #     uses: actions/checkout@v3
 
-      docker-build-and-push:
-        name: build-docker-image
-        runs-on: ubuntu-latest  
-        # needs: 
-        #   - lint-dockerfile
-        steps:      
-        - name: Checkout repository
-          uses: actions/checkout@v3
-
-    # - name: Set up QEMU
-    #   uses: docker/setup-qemu-action@v2
-    # - name: Set up Docker Buildx
-    #   uses: docker/setup-buildx-action@v2
-
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v1
-          with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+      #   - name: Login to GitHub Container Registry
+      #     uses: docker/login-action@v1
+      #     with:
+      #       registry: ghcr.io
+      #       username: ${{ github.actor }}
+      #       password: ${{ secrets.MY_GITHUB_TOKEN1 }}
         
-        - name: Build & Push to GitHub Package 
-          uses: opspresso/action-docker@master   # This is the slow version.
-          with:
-            args: --docker
-          env:
-            PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
-            REGISTRY: "docker.pkg.github.com"
-            TAG_NAME: "feature-v5.0.0-full"
-            #DOCKERFILE: ./Dockerfile
-            DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
-            IMAGE_NAME: openmeetings-dp
+      #   - name: Build & Push to GitHub Package 
+      #     uses: opspresso/action-docker@master  
+      #     with:
+      #       args: --docker
+      #     env:
+      #       PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+      #       REGISTRY: "docker.pkg.github.com"
+      #       TAG_NAME: "feature-v5.0.0-full"
+      #       #DOCKERFILE: ./Dockerfile
+      #       DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
+      #       IMAGE_NAME: openmeetings-dp
+    ######################### Create docker image ###################################
 
 
 # https://localhost:5443/openmeetings/install?2  попробовать
 
-    # - name: Build and push docker image  
-    #   uses: docker/build-push-action@v3   # This is the fast version.
-    #   with:
-    #     push: true
-    #     tags: ghcr.io/serwol2/openmeetingsdp:feature
-    #     build-args: BUILD_TYPE=full
-    
-
  
- 
-  # send-email:
-  #   runs-on: ubuntu-latest
-  #   name: send-email
-  #   needs: 
-  #     - make_stru_test
-  #     - python-lint
-  #   steps:
-  
-  #   - name: Send mail
-  #     run: echo "send mail OK :)"
-    #   uses: dawidd6/action-send-mail@v3
-    #   with:
-    #     server_address: smtp.mail.yahoo.com
-    #     server_port: 465
-    #     username: ${{secrets.MAIL_USERNAME}}
-    #     password: ${{secrets.MAIL_PASSWORD}}
-    #     subject: Github Actions job result
-    #     to: adamal_serg@tut.by
-    #     from: ${{secrets.MAIL_USERNAME}} # <user@example.com>
-    #     # Optional whether this connection use TLS (default is true if server_port is 465)
-    #     secure: false
-    #     # Optional plain body:
-    #     body: Build job of ${{github.repository}} completed successfully!
-    #     # Optional unsigned/invalid certificates allowance:
-    #     ignore_cert: false
-    #     # Optional converting Markdown to HTML (set content_type to text/html too):
-    #     convert_markdown: true
-    #     # Optional priority: 'high', 'normal' (default) or 'low'
-    #     #priority: low
 
   # create-pull-request:
   #   runs-on: ubuntu-latest
