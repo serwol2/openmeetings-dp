@@ -45,7 +45,7 @@ ENV PORTS=5443
 ENV SERVER_TZ=UTC
 
 WORKDIR ${OM_HOME}
-# hadolint ignore=DL3006
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
   && apt-get install -y --no-install-recommends \
@@ -60,9 +60,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sox \
     sudo \
     openjdk-17-jre \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
+   # && apt-get clean \
+   # && rm -rf /var/lib/apt/lists/*
+# hadolint ignore=DL3008
 RUN apt-get install -y --no-install-recommends \
     libreoffice \
     ffmpeg \
