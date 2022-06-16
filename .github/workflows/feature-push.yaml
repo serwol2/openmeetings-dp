@@ -75,12 +75,12 @@ jobs:
       - name: Run tfsec with reviewdog output on the PR
         uses: reviewdog/action-tfsec@master
         with:
-          github_token: ${{ secrets.GITH_TOKEN }}
+          github_token: ${{ secrets.MY_GITHUB_TOKEN1 }}
           working_directory: ${{ env.WORKING_DIRECTORY }} #./terraform # Change working directory
           level: info # Get more output from reviewdog
           reporter: github-pr-review # Change reviewdog reporter
           #filter_mode: nofilter # Check all files, not just the diff
-          fail_on_error: true # Fail action if errors are found
+          fail_on_error: false # Fail action if errors are found
           flags: -tee # Add debug flag to reviewdog
           #tfsec_flags: "" # Optional
   
