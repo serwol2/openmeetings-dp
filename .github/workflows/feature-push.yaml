@@ -69,11 +69,7 @@ jobs:
         continue-on-error: true
         working-directory: ${{ env.WORKING_DIRECTORY }}    
 
-      - name: terraform validate
-        uses: robertdebock/terraform-action@1.1.2
-        with:
-          action: validate
-          directory: ${{ env.WORKING_DIRECTORY }} 
+      
 
 
       - name: Run tfsec with reviewdog output on the PR
@@ -93,7 +89,11 @@ jobs:
         run: terraform init 
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      
+      - name: terraform validate
+        uses: robertdebock/terraform-action@1.1.2
+        with:
+          action: validate
+          directory: ${{ env.WORKING_DIRECTORY }} 
 
       # - name: Terraform plan
       #   id: plan
