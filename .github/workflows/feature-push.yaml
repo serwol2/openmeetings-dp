@@ -92,10 +92,10 @@ jobs:
           action: validate
           directory: ${{ env.WORKING_DIRECTORY }} 
 
-      # - name: Terraform plan
-      #   id: plan
-      #   run: terraform plan -no-color
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -no-color
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
 
       - name: Terraform Plan Status
