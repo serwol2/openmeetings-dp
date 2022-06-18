@@ -9,7 +9,7 @@ on:
 env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
-  MYGITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
+  GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
   MYAWS_REGION: "us-east-1"
   #REGISTRY: ghcr.io
 jobs:
