@@ -48,7 +48,7 @@ jobs:
     ######################### LINTERS ###################################
   
     test-terraform: 
-     name: running-terraform-tests
+     name: terraform-tests
      runs-on: ubuntu-latest
      env:
         WORKING_DIRECTORY: terraform
@@ -159,7 +159,7 @@ jobs:
         name: create-pull-request
         needs: 
           - lint-dockerfile
-          - running-terraform-tests
+          - test-terraform
         
 
         steps:
