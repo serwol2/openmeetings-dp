@@ -44,12 +44,12 @@ jobs:
     # ######################### Create docker image ###################################
 
     make_stru_test:
-    name: running-terraform-for-deploy
-    runs-on: ubuntu-latest
-    env:
-      WORKING_DIRECTORY: terraform
+      name: running-terraform-for-deploy
+      runs-on: ubuntu-latest
+      env:
+        WORKING_DIRECTORY: terraform
   
-    steps:
+      steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
 
