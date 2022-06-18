@@ -151,48 +151,40 @@ jobs:
 
 # https://localhost:5443/openmeetings/install?2  попробовать
 
- 
 
-  # create-pull-request:
-  #   runs-on: ubuntu-latest
-  #   name: create-pull-request
-  #   needs: 
-  #     - make_stru_test
-  #     - python-lint
-  #     - send-email
+  ######################### Create pull request ###################################
 
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v2
-  #       # with:
-  #       #   fetch-depth: 0
-  #       #   ref: feature
+    create-pull-request:
+        runs-on: ubuntu-latest
+        name: create-pull-request
+        needs: 
+          - lint-dockerfile
+          - running terraform tests
+        
 
-
-
+        steps:
+          - name: Check out repository code
+            uses: actions/checkout@v2
+            # with:
+            #   fetch-depth: 0
+            #   ref: feature
 
 
+          - name: install github cli
+            run: |
+              sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+              sudo apt-add-repository https://cli.github.com/packages
+              sudo apt update
+              sudo apt install gh
 
-
-
-      # - name: install github cli
-      #   run: |
-      #     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-      #     sudo apt-add-repository https://cli.github.com/packages
-      #     sudo apt update
-      #     sudo apt install gh
-
-      # - name: auth to github
-      #   run: 
-      #     gh auth login --with-token ${{ secrets.GITH_TOKEN  }}
-    
-
-
-
-      # - name: Create Pull Request CLI
-      #   run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base dev --head feature
-      #   env: 
-      #     GITHUB_TOKEN: ${{ secrets.GITH_TOKEN  }}
+          - name: auth to github
+            run: 
+              gh auth login --with-token ${{ secrets.GITH_TOKEN  }}
+        
+          - name: Create Pull Request CLI
+            run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base dev --head feature
+            env: 
+              GITHUB_TOKEN: ${{ secrets.GITH_TOKEN  }}
 
 
 
