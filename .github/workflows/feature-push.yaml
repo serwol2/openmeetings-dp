@@ -182,7 +182,7 @@ jobs:
           - name: Create Pull Request
             uses: devops-infra/action-pull-request@v0.4.2
             with:
-              github_token: ${{ secrets.GITH_TOKEN1 }}
+              github_token: ${{ secrets.MY_GITHUB_TOKEN1 }}
               title: 'Testt'
               reviewer: serwol
               source_branch: feature 
