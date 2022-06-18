@@ -152,12 +152,12 @@ jobs:
               sudo apt update
               sudo apt install gh
 
-          - name: auth to github
-            run: 
-              gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
+          # - name: auth to github
+          #   run: 
+          #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
         
           - name: Create Pull Request CLI
-            run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base dev --head feature
+            run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base develop --head feature
             env: 
               GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
 
