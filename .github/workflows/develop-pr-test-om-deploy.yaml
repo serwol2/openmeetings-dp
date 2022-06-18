@@ -58,7 +58,7 @@ jobs:
         with:
           aws-access-key-id: ${{env.AWS_ACCESS_KEY}}
           aws-secret-access-key: ${{env.AWS_SECRET_KEY}}
-          aws-region: ${{MYAWS_REGION}}
+          aws-region: ${{env.MYAWS_REGION}}
    
       # - name: 'Use terraform 1.1.7'
       #   uses: hashicorp/setup-terraform@v2
