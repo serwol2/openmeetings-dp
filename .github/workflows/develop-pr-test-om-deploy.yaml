@@ -44,7 +44,7 @@ jobs:
     # ######################### Create docker image ###################################
 
     make_stru_test:
-    name: running terraform for deploy
+    name: running-terraform-for-deploy
     runs-on: ubuntu-latest
     env:
       WORKING_DIRECTORY: terraform
