@@ -145,21 +145,21 @@ jobs:
             #   ref: feature
 
 
-          # - name: install github cli
-          #   run: |
-          #     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          #     sudo apt-add-repository https://cli.github.com/packages
-          #     sudo apt update
-          #     sudo apt install gh
+          - name: install github cli
+            run: |
+              sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+              sudo apt-add-repository https://cli.github.com/packages
+              sudo apt update
+              sudo apt install gh
 
-          # - name: auth to github
-          #   run: 
-          #     gh auth login --with-token ${{ secrets.GITH_TOKEN  }}
+          - name: auth to github
+            run: 
+              gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
         
-          # - name: Create Pull Request CLI
-          #   run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base dev --head feature
-          #   env: 
-          #     GITHUB_TOKEN: ${{ secrets.GITH_TOKEN  }}
+          - name: Create Pull Request CLI
+            run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base dev --head feature
+            env: 
+              GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
 
 
 
@@ -179,13 +179,13 @@ jobs:
           
           # # reviewers: serwol
           
-          - name: Create Pull Request
-            uses: devops-infra/action-pull-request@v0.4.2
-            with:
-              github_token: ${{ secrets.MY_GITHUB_TOKEN1 }}
-              title: 'Testt'
-              reviewer: serwol
-              source_branch: feature 
-              target_branch: develop
-              draft: true
-              get_diff: true
+          # - name: Create Pull Request
+          #   uses: devops-infra/action-pull-request@v0.4.2
+          #   with:
+          #     github_token: ${{ secrets.MY_GITHUB_TOKEN1 }}
+          #     title: 'Testt'
+          #     reviewer: serwol
+          #     source_branch: feature 
+          #     target_branch: develop
+          #     draft: true
+          #     get_diff: true
