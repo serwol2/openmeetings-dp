@@ -179,13 +179,13 @@ jobs:
           
           # # reviewers: serwol
           
-
-        uses: devops-infra/action-pull-request@v0.4.2
-        with:
-          github_token: ${{ secrets.GITH_TOKEN1 }}
-          title: 'Testt'
-          reviewer: serwol
-          source_branch: feature 
-          target_branch: develop
-          draft: true
-          get_diff: true
+          - name: Create Pull Request
+            uses: devops-infra/action-pull-request@v0.4.2
+            with:
+              github_token: ${{ secrets.GITH_TOKEN1 }}
+              title: 'Testt'
+              reviewer: serwol
+              source_branch: feature 
+              target_branch: develop
+              draft: true
+              get_diff: true
