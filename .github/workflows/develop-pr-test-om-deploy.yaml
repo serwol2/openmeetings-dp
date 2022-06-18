@@ -95,7 +95,7 @@ jobs:
         uses: dflook/terraform-apply@v1
         with:
           path: ${{ env.WORKING_DIRECTORY }}
-
+          auto_approve: true
 
 
 
