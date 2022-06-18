@@ -157,9 +157,10 @@ jobs:
           #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
         
           - name: Create Pull Request CLI
-            run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base develop --head feature
+            run: gh pr create --title "The new feature" --body "test and merge to develop pls" --base develop --head feature
             env: 
               GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
+
 
 
 
