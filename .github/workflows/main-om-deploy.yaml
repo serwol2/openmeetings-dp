@@ -18,13 +18,14 @@ jobs:
           name: build-docker-image
           runs-on: ubuntu-latest
           steps: 
-            - name: change-tag-gocker
-              uses: shrink/actions-docker-registry-tag@v1
+            - uses: shrink/actions-docker-registry-tag@v2
               with:
                 registry: ghcr.io
-                repository: 'serwol2/openmeetings-dp/openmeetings-dp' #'${{ github.repository }}'
-                target: feature-v5.0.0-full                
-                tags: omomo
+                repository: ${{ github.repository }}
+                target: sha-${{ github.sha }}
+                tags: |
+                  v1.0.0
+                  latest
 
     ######################### Create docker image ###################################
     # docker-build-and-push:
