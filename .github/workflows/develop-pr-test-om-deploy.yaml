@@ -3,7 +3,7 @@ on:
    #pull_request:
    push:
     branches:
-     - main #это чтобы оно не запустилось в develop , потом поменять!!!
+     - develop #это чтобы оно не запустилось в develop , потом поменять!!!
     # path:
     #   - terraform/**
 env:
@@ -43,22 +43,71 @@ jobs:
     #         IMAGE_NAME: openmeetings-dp
     # ######################### Create docker image ###################################
 
-    make_stru_test:
-      name: running-terraform-for-deploy
-      runs-on: ubuntu-latest
-      env:
-        WORKING_DIRECTORY: terraform
-  
-      steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v3
+######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+   
+    build-and-push-image:
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1 
-        with:
-          aws-access-key-id: ${{env.AWS_ACCESS_KEY}}
-          aws-secret-access-key: ${{env.AWS_SECRET_KEY}}
-          aws-region: ${{env.MYAWS_REGION}}
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v3
+
+          - name: Log in to the Container registry
+            uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+            with:
+              registry: ${{ env.REGISTRY }}
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: Extract metadata (tags, labels) for Docker
+            id: meta
+            uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+            with:
+              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+          - name: Build and push Docker image
+            uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+            with:
+              context: .
+              push: true
+              build-args: ["BUILD_TYPE=full"]
+              tags: ${{ steps.meta.outputs.tags }}
+              labels: ${{ steps.meta.outputs.labels }}
+
+
+######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # make_stru_test:
+    #   name: running-terraform-for-deploy
+    #   runs-on: ubuntu-latest
+    #   env:
+    #     WORKING_DIRECTORY: terraform
+  
+    #   steps:
+    #   - name: 'Checkout'
+    #     uses: actions/checkout@v3
+
+    #   - name: Configure AWS Credentials
+    #     uses: aws-actions/configure-aws-credentials@v1 
+    #     with:
+    #       aws-access-key-id: ${{env.AWS_ACCESS_KEY}}
+    #       aws-secret-access-key: ${{env.AWS_SECRET_KEY}}
+    #       aws-region: ${{env.MYAWS_REGION}}
    
       # - name: 'Use terraform 1.1.7'
       #   uses: hashicorp/setup-terraform@v2
@@ -91,19 +140,19 @@ jobs:
       #   run: terraform apply -auto-approve -input=false
       #   working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_wrapper: false
 
-      - name: Terraform apply
-        uses: dflook/terraform-apply@v1
-        with:
-          path: ${{ env.WORKING_DIRECTORY }}
-          auto_approve: true
+      # - name: Terraform apply
+      #   uses: dflook/terraform-apply@v1
+      #   with:
+      #     path: ${{ env.WORKING_DIRECTORY }}
+      #     auto_approve: true
 
-      - name: test output
-        run:  address=$(terraform output ec2instance)   
+      # - name: test output
+      #   run:  address=$(terraform output ec2instance)   
 
 
 
