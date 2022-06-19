@@ -15,7 +15,7 @@ env:
 
 jobs:
     docker-push-to-aws-ecr:
-          name: build-docker-image
+          name: change-tag-docker-image
           runs-on: ubuntu-latest
           steps: 
             - uses: shrink/actions-docker-registry-tag@v2
@@ -23,9 +23,7 @@ jobs:
                 registry: ghcr.io
                 repository: "${{ github.repository }}/openmeetings-dp"
                 target: feature-v5.0.0-full
-                tags: |
-                  v1.0.0
-                  latest
+                tags: feature-v5.0.0-full
 
     ######################### Create docker image ###################################
     # docker-build-and-push:
