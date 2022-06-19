@@ -18,12 +18,21 @@ jobs:
           name: change-tag-docker-image
           runs-on: ubuntu-latest
           steps: 
-            - uses: shrink/actions-docker-registry-tag@v2
-              with:
-                registry: ghcr.io
-                repository: "${{ github.repository }}/openmeetings-dp"
-                target: feature-v5.0.0-full
-                tags: feature-v5.0.0-full
+              - uses: mr-smithers-excellent/docker-build-push@v3
+                with:
+                  image: ghcr.io/serwol2/openmeetings-dp/openmeetings-dp:feature-v5.0.0-full
+                  registry: 273043149442.dkr.ecr.us-east-1.amazonaws.com/om:latest
+                env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+
+
+            # - uses: shrink/actions-docker-registry-tag@v2
+            #   with:
+            #     registry: ghcr.io
+            #     repository: "${{ github.repository }}/openmeetings-dp"
+            #     target: feature-v5.0.0-full
+            #     tags: feature-v5.0.0-full
 
     ######################### Create docker image ###################################
     # docker-build-and-push:
