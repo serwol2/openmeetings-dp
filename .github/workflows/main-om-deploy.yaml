@@ -91,7 +91,7 @@ jobs:
                 token: ${{secrets.MY_GITHUB_TOKEN1}}
                 registry: ghcr.io
                 repository: '${{ github.repository }}'
-                target: openmeetings-dp:develop
+                target: develop
                 tags: latest
 
 
