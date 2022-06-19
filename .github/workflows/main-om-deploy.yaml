@@ -22,7 +22,7 @@ jobs:
               with:
                 registry: ghcr.io
                 repository: "${{ github.repository }}"
-                target: feature-v5.0.0-full
+                target: openmeetings-dp:feature-v5.0.0-full
                 tags: latest
 
     ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
