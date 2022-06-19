@@ -21,8 +21,8 @@ jobs:
             - uses: shrink/actions-docker-registry-tag@v2
               with:
                 registry: ghcr.io
-                repository: ${{ github.repository }}
-                target: sha-${{ github.sha }}
+                repository: "${{ github.repository }}/openmeetings-dp"
+                target: feature-v5.0.0-full
                 tags: |
                   v1.0.0
                   latest
