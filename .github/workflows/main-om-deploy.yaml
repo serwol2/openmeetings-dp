@@ -1,18 +1,33 @@
-name: 'plan feature-push'
+name: 'deploy-to-aws-ecs'
 on:
    #pull_request:
    push:
     branches:
-     - main #это чтобы оно не запустилось в develop , потом поменять!!!
-    # path:
-    #   - terraform/**
+     - develop #потом сменить на нужный, main
 env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
   GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
-  MYAWS_REGION: "us-east-1"
+  GITHUB_REPOSITORY: 
+ #MYAWS_REGION: "us-east
+  ECR_REPOSITORY: "om"    
   #REGISTRY: ghcr.io
+
 jobs:
+    docker-push-to-aws-ecr:
+         #name: build-docker-image
+         # runs-on: ubuntu-latest
+          steps: 
+          - name: change-tag-gocker-image
+            uses: shrink/actions-docker-registry-tag@v2
+            with:
+            registry: ghcr.io
+            repository: ${{ github.repository }}
+            target: openmeetings-dp
+            tags: |
+              v1.0.0
+              latest
+
     ######################### Create docker image ###################################
     # docker-build-and-push:
     #     name: build-docker-image
@@ -43,22 +58,22 @@ jobs:
     #         IMAGE_NAME: openmeetings-dp
     # ######################### Create docker image ###################################
 
-    make_stru_test:
-      name: running-terraform-for-deploy
-      runs-on: ubuntu-latest
-      env:
-        WORKING_DIRECTORY: terraform
+    # make_stru_test:
+    #   name: running-terraform-for-deploy
+    #   runs-on: ubuntu-latest
+    #   env:
+    #     WORKING_DIRECTORY: terraform
   
-      steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v3
+    #   steps:
+    #   - name: 'Checkout'
+    #     uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1 
-        with:
-          aws-access-key-id: ${{env.AWS_ACCESS_KEY}}
-          aws-secret-access-key: ${{env.AWS_SECRET_KEY}}
-          aws-region: ${{env.MYAWS_REGION}}
+    #   - name: Configure AWS Credentials
+    #     uses: aws-actions/configure-aws-credentials@v1 
+    #     with:
+    #       aws-access-key-id: ${{env.AWS_ACCESS_KEY}}
+    #       aws-secret-access-key: ${{env.AWS_SECRET_KEY}}
+    #       aws-region: ${{env.MYAWS_REGION}}
    
       # - name: 'Use terraform 1.1.7'
       #   uses: hashicorp/setup-terraform@v2
@@ -91,19 +106,19 @@ jobs:
       #   run: terraform apply -auto-approve -input=false
       #   working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_wrapper: false
 
-      - name: Terraform apply
-        uses: dflook/terraform-apply@v1
-        with:
-          path: ${{ env.WORKING_DIRECTORY }}
-          auto_approve: true
+      # - name: Terraform apply
+      #   uses: dflook/terraform-apply@v1
+      #   with:
+      #     path: ${{ env.WORKING_DIRECTORY }}
+      #     auto_approve: true
 
-      - name: test output
-        run:  address=$(terraform output ec2instance)   
+      # - name: test output
+      #   run:  address=$(terraform output ec2instance)   
 
 
 
