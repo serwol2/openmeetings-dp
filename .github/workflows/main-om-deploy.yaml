@@ -23,8 +23,8 @@ jobs:
                 token: ${{secrets.MY_GITHUB_TOKEN1}}
                 registry: ghcr.io
                 repository: "serwol2/openmeetings-dp/openmeetings-dp"
-                target: openmeetings-dp:om:latest
-                tags: om:latest1
+                target: om:latest
+                tags: latest
 
     ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
     # docker-build-and-push:
