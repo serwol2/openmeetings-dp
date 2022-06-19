@@ -16,19 +16,7 @@ env:
   #REGISTRY: ghcr.io
 
 jobs:
-    # docker-push-to-aws-ecr:  
-    #       name: change-tag-docker-image
-    #       runs-on: ubuntu-latest
-    #       steps: 
-    #         - uses: shrink/actions-docker-registry-tag@v2
-    #           with:
-    #             token: ${{secrets.MY_GITHUB_TOKEN1}}
-    #             registry: ghcr.io
-    #             repository: "serwol2/openmeetings-dp/openmeetings-dp"
-    #             target: om:latest
-    #             tags: latest
-
-    ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+    ######################### Create docker image (фиговый) ###################################
     # docker-build-and-push:
     #     name: build-docker-image
     #     runs-on: ubuntu-latest  
@@ -57,41 +45,54 @@ jobs:
     #         DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
     #         #IMAGE_NAME: openmeetings-dp
     # ######################### Create docker image ###################################
-   build-and-push-image:
-      runs-on: ubuntu-latest
-      permissions:
-        contents: read
-        packages: write
+   
+    ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+   
+    # build-and-push-image:
+    #     runs-on: ubuntu-latest
+    #     permissions:
+    #       contents: read
+    #       packages: write
 
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
+    #     steps:
+    #       - name: Checkout repository
+    #         uses: actions/checkout@v3
 
-        - name: Log in to the Container registry
-          uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-          with:
-            registry: ${{ env.REGISTRY }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
+    #       - name: Log in to the Container registry
+    #         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+    #         with:
+    #           registry: ${{ env.REGISTRY }}
+    #           username: ${{ github.actor }}
+    #           password: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Extract metadata (tags, labels) for Docker
-          id: meta
-          uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-          with:
-            images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    #       - name: Extract metadata (tags, labels) for Docker
+    #         id: meta
+    #         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+    #         with:
+    #           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-        - name: Build and push Docker image
-          uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-          with:
-            context: .
-            push: true
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
-
-
+    #       - name: Build and push Docker image
+    #         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+    #         with:
+    #           context: .
+    #           push: true
+    #           tags: ${{ steps.meta.outputs.tags }}
+    #           labels: ${{ steps.meta.outputs.labels }}
 
 
+######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
 
+    docker-push-to-aws-ecr:  
+          name: change-tag-docker-image
+          runs-on: ubuntu-latest
+          steps: 
+            - uses: shrink/actions-docker-registry-tag@v2
+              with:
+                token: ${{secrets.MY_GITHUB_TOKEN1}}
+                registry: ghcr.io
+                repository: '${{ github.repository }}'
+                target: openmeetings-dp:develop
+                tags: latest
 
 
 
