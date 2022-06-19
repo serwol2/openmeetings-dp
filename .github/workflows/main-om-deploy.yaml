@@ -18,7 +18,7 @@ jobs:
           name: change-tag-docker-image
           runs-on: ubuntu-latest
           steps: 
-            - uses: shrink/actions-docker-registry-tag@v2
+            - uses: shrink/actions-docker-registry-tag@v1
               with:
                 registry: ghcr.io
                 repository: "serwol2/openmeetings-dp/"
