@@ -82,7 +82,8 @@ jobs:
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
 
-    docker-push-to-aws-ecr:  
+######################### new tag docker image #########################
+   docker-push-to-aws-ecr:  
           name: change-tag-docker-image
           runs-on: ubuntu-latest
           steps: 
@@ -93,7 +94,7 @@ jobs:
                 repository: '${{ github.repository }}'
                 target: latest
                 tags: new
-
+######################### new tag docker image #########################
 
 
 
