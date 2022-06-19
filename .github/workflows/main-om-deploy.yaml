@@ -91,7 +91,7 @@ jobs:
                 token: ${{secrets.MY_GITHUB_TOKEN1}}
                 registry: ghcr.io
                 repository: '${{ github.repository }}'
-                target: develop
+                target: latest
                 tags: 273043149442.dkr.ecr.us-east-1.amazonaws.com/om:latest
 
 
