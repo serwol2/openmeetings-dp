@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-1" # del for pipeline
   #access_key = "AKIAT7EVD2KBERXXXXX"
   #secret_key = "rnucH1/Th8CHKIgPa4W+PCYEEZXXXXXXXXXX"
 }
@@ -54,10 +54,15 @@ resource "aws_instance" "for-curento-om-test" {   # убрать нафиг по
   ami             = "ami-0c4f7023847b90238"
   instance_type   = "t2.micro"
   key_name        = "mykeypairsergey"
-  security_groups = [ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg-kms.id}" ]
+  #associate_public_ip_address = false
+  vpc_security_group_ids = [ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg-kms.id}" ]
   #vpc_security_group_ids = aws_security_group.om-test-sg.id
   subnet_id       = "subnet-0ee2ec2a28a4e4a0f"
-  user_data       = file("inst-kms.sh")
+  user_data       = <<EOF
+#!/bin/bash
+sudo apt update && sudo apt install -y docker.io
+sudo docker run -d --name kms -p 8888:8888 kurento/kurento-media-server:latest
+EOF
   tags = {
     Name = "for-curento-om-test"
   }
@@ -99,13 +104,16 @@ resource "aws_instance" "for-docker-om-test" {
   instance_type   = "t2.medium"
   #instance_type   = "t2.micro"
   key_name        = "mykeypairsergey"
-  security_groups = [ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]
+  vpc_security_group_ids = [ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]
   subnet_id       = "subnet-0ee2ec2a28a4e4a0f"   # этот хардкод заменить
   #user_data       = file("inst_docker.sh")
   user_data = <<EOF
 #!/bin/bash
 sudo apt update && sudo apt install docker.io -y
-docker pull ghcr.io/serwol2/openmeetings-dp/openmeetings-dp:feature-v5.0.0-full
+sudo docker run -d --name om-test -p 5443:5443 \
+  -e OM_TYPE="min" \
+  -e OM_KURENTO_WS_URL="ws://${aws_instance.for-curento-om-test.private_ip}:8888/kurento" \
+  -it ghcr.io/serwol2/openmeetings-dp/openmeetings-dp:feature-v5.0.0-full
 EOF
   tags = {
     Name = "for-docker-om-test"
