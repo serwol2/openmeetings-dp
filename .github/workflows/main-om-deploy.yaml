@@ -22,8 +22,8 @@ jobs:
               uses: shrink/actions-docker-registry-tag@v1
               with:
                 registry: 'ghcr.io'
-                repository: 'serwol2/openmeetings-dp' #'${{ github.repository }}'
-                target: openmeetings-dp
+                repository: 'serwol2/openmeetings-dp/openmeetings-dp' #'${{ github.repository }}'
+                target: feature-v5.0.0-full
                 tags: latest
 
     ######################### Create docker image ###################################
