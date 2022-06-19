@@ -10,7 +10,7 @@ env:
   GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
   #GITHUB_REPOSITORY: 
  #MYAWS_REGION: "us-east
-  ECR_REPOSITORY: "om"    
+  #ECR_REPOSITORY: "om"    
   #REGISTRY: ghcr.io
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
             - uses: shrink/actions-docker-registry-tag@v2
               with:
                 registry: ghcr.io
-                repository: "${{ github.repository }}"
+                repository: "serwol2/openmeetings-dp/"
                 target: openmeetings-dp:feature-v5.0.0-full
                 tags: latest
 
