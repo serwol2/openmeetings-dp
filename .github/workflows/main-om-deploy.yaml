@@ -19,7 +19,7 @@ jobs:
           runs-on: ubuntu-latest
           steps: 
             - name: change-tag-gocker
-              uses: shrink/actions-docker-registry-tag@v1
+              uses: shrink/actions-docker-registry-tag@v2
               with:
                 registry: ghcr.io
                 repository: 'serwol2/openmeetings-dp/openmeetings-dp' #'${{ github.repository }}'
