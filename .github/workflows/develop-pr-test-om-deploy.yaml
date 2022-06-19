@@ -11,6 +11,8 @@ env:
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
   GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
   MYAWS_REGION: "us-east-1"
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
   #REGISTRY: ghcr.io
 jobs:
     ######################### Create docker image ###################################
