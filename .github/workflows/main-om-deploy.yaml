@@ -22,8 +22,8 @@ jobs:
               with:
                 registry: ghcr.io
                 repository: "serwol2/openmeetings-dp/"
-                target: openmeetings-dp:feature-v5.0.0-full
-                tags: latest
+                target: "openmeetings-dp:feature-v5.0.0-full"
+                tags: "om:latest"
 
     ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
     # docker-build-and-push:
