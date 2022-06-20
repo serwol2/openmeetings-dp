@@ -113,7 +113,7 @@ sudo apt update && sudo apt install docker.io -y
 sudo docker run -d --name om-test -p 5443:5443 \
   -e OM_TYPE="min" \
   -e OM_KURENTO_WS_URL="ws://${aws_instance.for-curento-om-test.private_ip}:8888/kurento" \
-  -it ghcr.io/serwol2/openmeetings-dp/openmeetings-dp:feature-v5.0.0-full
+  -it ghcr.io/serwol2/openmeetings-dp:develop
 EOF
   tags = {
     Name = "for-docker-om-test"

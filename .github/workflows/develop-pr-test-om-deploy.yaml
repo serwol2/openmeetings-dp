@@ -47,53 +47,40 @@ jobs:
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
    
-    build-and-push-image:
-        runs-on: ubuntu-latest
-        permissions:
-          contents: read
-          packages: write
+    # build-and-push-image:
+    #     runs-on: ubuntu-latest
+    #     permissions:
+    #       contents: read
+    #       packages: write
 
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v3
+    #     steps:
+    #       - name: Checkout repository
+    #         uses: actions/checkout@v3
 
-          - name: Log in to the Container registry
-            uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-            with:
-              registry: ${{ env.REGISTRY }}
-              username: ${{ github.actor }}
-              password: ${{ secrets.GITHUB_TOKEN }}
+    #       - name: Log in to the Container registry
+    #         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+    #         with:
+    #           registry: ${{ env.REGISTRY }}
+    #           username: ${{ github.actor }}
+    #           password: ${{ secrets.GITHUB_TOKEN }}
 
-          - name: Extract metadata (tags, labels) for Docker
-            id: meta
-            uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-            with:
-              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    #       - name: Extract metadata (tags, labels) for Docker
+    #         id: meta
+    #         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+    #         with:
+    #           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-          - name: Build and push Docker image
-            uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-            with:
-              context: .
-              push: true
-              build-args: "BUILD_TYPE=full"
-              tags: ${{ steps.meta.outputs.tags }}
-              labels: ${{ steps.meta.outputs.labels }}
+    #       - name: Build and push Docker image
+    #         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+    #         with:
+    #           context: .
+    #           push: true
+    #           build-args: "BUILD_TYPE=full"
+    #           tags: ${{ steps.meta.outputs.tags }}
+    #           labels: ${{ steps.meta.outputs.labels }}
 
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
-
-
-
-
-
-
-
-
-
-
-
-
-
     # make_stru_test:
     #   name: running-terraform-for-deploy
     #   runs-on: ubuntu-latest
@@ -111,57 +98,73 @@ jobs:
     #       aws-secret-access-key: ${{env.AWS_SECRET_KEY}}
     #       aws-region: ${{env.MYAWS_REGION}}
    
-      # - name: 'Use terraform 1.1.7'
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: 1.1.7
-   
+    #   - name: 'Use terraform 1.1.7'
+    #     uses: hashicorp/setup-terraform@v2
+    #     with:
+    #       terraform_version: 1.1.7
       
-      # - name: 'Terraform init'
-      #   id: init
-      #   run: terraform init 
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+    #   - name: 'Terraform init'
+    #     id: init
+    #     run: terraform init 
+    #     working-directory: ${{ env.WORKING_DIRECTORY }}
       
-      # - name: terraform validate
-      #   uses: robertdebock/terraform-action@1.1.2
-      #   with:
-      #     action: validate
-      #     directory: ${{ env.WORKING_DIRECTORY }} 
+    #   # - name: terraform validate
+    #   #   uses: robertdebock/terraform-action@1.1.2
+    #   #   with:
+    #   #     action: validate
+    #   #     directory: ${{ env.WORKING_DIRECTORY }} 
       
-      # - name: 'Terraform plan'
-      #   id: plan
-      #   run: terraform plan -no-color
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+    #   # - name: 'Terraform plan'
+    #   #   id: plan
+    #   #   run: terraform plan -no-color
+    #   #   working-directory: ${{ env.WORKING_DIRECTORY }}
       
-      # - name: Terraform Plan Status
-      #   if: steps.plan.outcome == 'failure'
-      #   run: exit 1 
+    #   # - name: Terraform Plan Status
+    #   #   if: steps.plan.outcome == 'failure'
+    #   #   run: exit 1 
 
-      # - name: 'Terraform apply'
-      #   id: apply
-      #   run: terraform apply -auto-approve -input=false
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+    #   - name: 'Terraform apply'
+    #     id: apply
+    #     run: terraform apply -auto-approve -input=false
+    #     working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_wrapper: false
+    #   - name: Setup Terraform
+    #     uses: hashicorp/setup-terraform@v2
+    #     with:
+    #       terraform_wrapper: false
 
-      # - name: Terraform apply
-      #   uses: dflook/terraform-apply@v1
-      #   with:
-      #     path: ${{ env.WORKING_DIRECTORY }}
-      #     auto_approve: true
+    #   - name: Terraform apply
+    #     uses: dflook/terraform-apply@v1
+    #     with:
+    #       path: ${{ env.WORKING_DIRECTORY }}
+    #       auto_approve: true
 
-      # - name: test output
-      #   run:  address=$(terraform output ec2instance)   
+    #   - name: test output
+    #     run:  address=$(terraform output ec2instance)   
 
-
-
-
+######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
 
 
-    ######################### Deploy OM-test to AWS ###################################
+    ######################### push docker image to AWS ECR ###################################
+    push-dockerimage-ecr:
+      runs-on: ubuntu-latest
+      steps:
+      - name: install-aws-cli
+      #- id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1.0.3
+        with:
+          version: 2     # default
+          verbose: false # default
+          arch: amd64    # allowed values: amd64, arm64
+          rootdir: ""    # defaults to "PWD"
+          workdir: ""    # defaults to "PWD/unfor19-awscli"
+      
+      - name: push-image
+        uses: docker-practice/actions-setup-docker@master
+        run: |
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
+            docker pull ghcr.io/serwol2/openmeetings-dp:develop
+            
 
 
 
@@ -174,8 +177,7 @@ jobs:
 
 
 
-
-    ######################### Deploy OM-test to AWS ###################################
+    ########################## push docker image to AWS ECR ###################################
 
 
 
