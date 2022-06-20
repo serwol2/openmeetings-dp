@@ -178,13 +178,14 @@ jobs:
         - name: Name Docker image
           run: docker images  
 
-        # - name: push-image
-        #   run: |
-        #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
-        #       docker tag openmeetings-dp:develop 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:develop
+        - name: push-image
+          run: |
+              aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
+              docker tag ghcr.io/serwol2/openmeetings-dp 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:develop
      # docker push 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
 
-
+        - name: Name Docker image
+          run: docker images  
 
 
 
