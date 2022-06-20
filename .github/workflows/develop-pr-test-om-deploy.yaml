@@ -149,6 +149,13 @@ jobs:
     push-dockerimage-ecr:
         runs-on: ubuntu-latest
         steps:
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ AWS_ACCESS_KEY }}
+            aws-secret-access-key: ${{ AWS_SECRET_KEY }}
+            aws-region: ${{ MYAWS_REGION }}
+        
         - name: install-aws-cli
         #- id: install-aws-cli
           uses: unfor19/install-aws-cli-action@v1.0.3
@@ -159,7 +166,7 @@ jobs:
             rootdir: ""    # defaults to "PWD"
             workdir: ""    # defaults to "PWD/unfor19-awscli"
         
-        - name: push-image
+        - name: inst-docker
           uses: docker-practice/actions-setup-docker@master
             
         - name: push-image
