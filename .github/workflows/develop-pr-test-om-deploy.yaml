@@ -159,11 +159,11 @@ jobs:
             rootdir: ""    # defaults to "PWD"
             workdir: ""    # defaults to "PWD/unfor19-awscli"
         
-        # - name: push-image
-        #   uses: docker-practice/actions-setup-docker@master
-        #   run: |
-        #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
-        #       docker pull ghcr.io/serwol2/openmeetings-dp:develop
+        - name: push-image
+          uses: docker-practice/actions-setup-docker@master
+          run: |
+              aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
+              docker pull ghcr.io/serwol2/openmeetings-dp:develop
               
 
 
