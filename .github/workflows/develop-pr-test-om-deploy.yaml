@@ -174,22 +174,11 @@ jobs:
 
         - name: Pull Docker image
           run: docker pull ghcr.io/serwol2/openmeetings-dp:develop
-                  
 
-
-
-        # - name: Login to docker hub
-        #   uses: actions-hub/docker/login@master
-        #   # env:
-        #   #   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        #   #   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            
-        # - name: push-image
-        #   run: |
-        #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
-        #       sudo apt-get update && sudo apt-get install docker.io -y
-        #       docker pull ghcr.io/serwol2/openmeetings-dp:develop
-        #       docker tag openmeetings-dp:latest 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
+        - name: push-image
+          run: |
+              aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
+              docker tag openmeetings-dp:latest 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
      # docker push 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
 
 
