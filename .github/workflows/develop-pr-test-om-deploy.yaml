@@ -152,9 +152,9 @@ jobs:
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v1
           with:
-            aws-access-key-id: ${{ AWS_ACCESS_KEY }}
-            aws-secret-access-key: ${{ AWS_SECRET_KEY }}
-            aws-region: ${{ MYAWS_REGION }}
+            aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
+            aws-secret-access-key: ${{ env.AWS_SECRET_KEY }}
+            aws-region: ${{ env.MYAWS_REGION }}
         
         - name: install-aws-cli
         #- id: install-aws-cli
