@@ -175,8 +175,8 @@ jobs:
         - name: Pull Docker image
           run: docker pull ghcr.io/serwol2/openmeetings-dp:develop
 
-        # - name: Name Docker image
-        #   run: docker images  
+        - name: Name Docker image
+          run: docker images  
 
         - name: push-image
           run: |
