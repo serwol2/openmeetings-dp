@@ -147,24 +147,24 @@ jobs:
 
     ######################### push docker image to AWS ECR ###################################
     push-dockerimage-ecr:
-      runs-on: ubuntu-latest
-      steps:
-      - name: install-aws-cli
-      #- id: install-aws-cli
-        uses: unfor19/install-aws-cli-action@v1.0.3
-        with:
-          version: 2     # default
-          verbose: false # default
-          arch: amd64    # allowed values: amd64, arm64
-          rootdir: ""    # defaults to "PWD"
-          workdir: ""    # defaults to "PWD/unfor19-awscli"
-      
-      - name: push-image
-        uses: docker-practice/actions-setup-docker@master
-        run: |
-            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
-            docker pull ghcr.io/serwol2/openmeetings-dp:develop
-            
+        runs-on: ubuntu-latest
+        steps:
+        - name: install-aws-cli
+        #- id: install-aws-cli
+          uses: unfor19/install-aws-cli-action@v1.0.3
+          with:
+            version: 2     # default
+            verbose: false # default
+            arch: amd64    # allowed values: amd64, arm64
+            rootdir: ""    # defaults to "PWD"
+            workdir: ""    # defaults to "PWD/unfor19-awscli"
+        
+        # - name: push-image
+        #   uses: docker-practice/actions-setup-docker@master
+        #   run: |
+        #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
+        #       docker pull ghcr.io/serwol2/openmeetings-dp:develop
+              
 
 
 
