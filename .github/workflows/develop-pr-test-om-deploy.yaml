@@ -148,6 +148,7 @@ jobs:
     ######################### push docker image to AWS ECR ###################################
     push-dockerimage-ecr:
         runs-on: ubuntu-latest
+
         steps:
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v1
@@ -166,16 +167,30 @@ jobs:
             rootdir: ""    # defaults to "PWD"
             workdir: ""    # defaults to "PWD/unfor19-awscli"
         
-        # - name: inst-docker
-        #   uses: docker-practice/actions-setup-docker@master
+        - name: Docker login
+          run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p $GITHUB_TOKEN
+          env:
+              GITHUB_TOKEN: ${{env.GITHUB_TOKEN}}
+
+        - name: Pull Docker image
+          run: docker pull ghcr.io/serwol2/openmeetings-dp:develop
+                  
+
+
+
+        # - name: Login to docker hub
+        #   uses: actions-hub/docker/login@master
+        #   # env:
+        #   #   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        #   #   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
             
-        - name: push-image
-          run: |
-              aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
-              sudo apt update && sudo apt install docker.io -y
-              docker pull ghcr.io/serwol2/openmeetings-dp:develop
-              docker tag openmeetings-dp:latest 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
-              docker push 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
+        # - name: push-image
+        #   run: |
+        #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273043149442.dkr.ecr.us-east-1.amazonaws.com
+        #       sudo apt-get update && sudo apt-get install docker.io -y
+        #       docker pull ghcr.io/serwol2/openmeetings-dp:develop
+        #       docker tag openmeetings-dp:latest 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
+     # docker push 273043149442.dkr.ecr.us-east-1.amazonaws.com/openmeetings-dp:latest
 
 
 
