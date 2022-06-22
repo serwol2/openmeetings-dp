@@ -1,11 +1,8 @@
 name: 'plan feature-push'
 on:
-   #pull_request:
-   # push:
+   pull_request:                  # push:
     branches:
-   #  - develop #это чтобы оно не запустилось в develop , потом поменять!!!
-    # path:
-    #   - terraform/**
+     - develop                        #это чтобы оно не запустилось в develop , потом поменять!!!
 env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
@@ -47,37 +44,37 @@ jobs:
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
    
-    # build-and-push-image:
-    #     runs-on: ubuntu-latest
-    #     permissions:
-    #       contents: read
-    #       packages: write
+    build-and-push-image:
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write
 
-    #     steps:
-    #       - name: Checkout repository
-    #         uses: actions/checkout@v3
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v3
 
-    #       - name: Log in to the Container registry
-    #         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-    #         with:
-    #           registry: ${{ env.REGISTRY }}
-    #           username: ${{ github.actor }}
-    #           password: ${{ secrets.GITHUB_TOKEN }}
+          - name: Log in to the Container registry
+            uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+            with:
+              registry: ${{ env.REGISTRY }}
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
 
-    #       - name: Extract metadata (tags, labels) for Docker
-    #         id: meta
-    #         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-    #         with:
-    #           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          - name: Extract metadata (tags, labels) for Docker
+            id: meta
+            uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+            with:
+              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-    #       - name: Build and push Docker image
-    #         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-    #         with:
-    #           context: .
-    #           push: true
-    #           build-args: "BUILD_TYPE=full"
-    #           tags: ${{ steps.meta.outputs.tags }}
-    #           labels: ${{ steps.meta.outputs.labels }}
+          - name: Build and push Docker image
+            uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+            with:
+              context: .
+              push: true
+              build-args: "BUILD_TYPE=full"
+              tags: ${{ steps.meta.outputs.tags }}
+              labels: ${{ steps.meta.outputs.labels }}
 
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
@@ -146,46 +143,37 @@ jobs:
 
 
     ######################### push docker image to AWS ECR ###################################
-    push-dockerimage-ecr:
-        runs-on: ubuntu-latest
+    # push-dockerimage-ecr:
+    #     runs-on: ubuntu-latest
 
-        steps:
-        - name: Configure AWS Credentials
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
-            aws-secret-access-key: ${{ env.AWS_SECRET_KEY }}
-            aws-region: ${{ env.MYAWS_REGION }}
+    #     steps:
+    #     - name: Configure AWS Credentials
+    #       uses: aws-actions/configure-aws-credentials@v1
+    #       with:
+    #         aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
+    #         aws-secret-access-key: ${{ env.AWS_SECRET_KEY }}
+    #         aws-region: ${{ env.MYAWS_REGION }}
         
-        - name: install-aws-cli
-          uses: unfor19/install-aws-cli-action@v1.0.3
-          with:
-            version: 2     # default
-            verbose: false # default
-            arch: amd64    # allowed values: amd64, arm64
-            rootdir: ""    # defaults to "PWD"
-            workdir: ""    # defaults to "PWD/unfor19-awscli"
+    #     - name: install-aws-cli
+    #       uses: unfor19/install-aws-cli-action@v1.0.3
+    #       with:
+    #         version: 2     # default
+    #         verbose: false # default
+    #         arch: amd64    # allowed values: amd64, arm64
+    #         rootdir: ""    # defaults to "PWD"
+    #         workdir: ""    # defaults to "PWD/unfor19-awscli"
         
-        - name: Pull Docker image
-          run: docker pull ghcr.io/serwol2/openmeetings-dp:develop
+    #     - name: Pull Docker image
+    #       run: docker pull ghcr.io/serwol2/openmeetings-dp:develop
 
-        # - name: Name Docker image
-        #   run: docker images  
+    #     # - name: Name Docker image
+    #     #   run: docker images  
 
-        - name: push-image
-          run: |
-              aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b0e2l4e5
-              docker tag ghcr.io/serwol2/openmeetings-dp:develop public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
-              docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
-
-
-
-
-
-
-
-
-
+    #     - name: push-image
+    #       run: |
+    #           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b0e2l4e5
+    #           docker tag ghcr.io/serwol2/openmeetings-dp:develop public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
+    #           docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
 
     ########################## push docker image to AWS ECR ###################################
 
