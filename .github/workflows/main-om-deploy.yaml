@@ -93,7 +93,7 @@ jobs:
                 registry: ghcr.io
                 repository: '${{ github.repository }}'
                 target: pr-8
-                tags: new
+                tags: develop
 ######################### new tag docker image #########################
 
 
