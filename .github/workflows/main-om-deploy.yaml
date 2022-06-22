@@ -92,7 +92,7 @@ jobs:
                 token: ${{secrets.MY_GITHUB_TOKEN1}}
                 registry: ghcr.io
                 repository: '${{ github.repository }}'
-                target: latest
+                target: pr-8
                 tags: new
 ######################### new tag docker image #########################
 
