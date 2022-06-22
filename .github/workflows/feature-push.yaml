@@ -1,14 +1,12 @@
 name: 'plan feature-push'
 on:
-  #pull_request:
-  # push:
+   push:
     branches:
      - feature
-    # path:
-    #   - terraform/**
 env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
+  WORKING_DIRECTORY: ./terraform
   #GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
   #REGISTRY: ghcr.io
 jobs:
@@ -38,8 +36,8 @@ jobs:
     test-terraform: 
      name: terraform-tests
      runs-on: ubuntu-latest
-     env:
-        WORKING_DIRECTORY: terraform
+    #  env:
+    #     WORKING_DIRECTORY: terraform
   
      steps:
 
@@ -51,11 +49,11 @@ jobs:
         with:
           terraform_version: 1.1.7
 
-      # - name: 'Terraform fmt'
-      #   id: fmt
-      #   run: terraform fmt -check
-      #   continue-on-error: true
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}    
+      - name: 'Terraform fmt'
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+        working-directory: ${{ env.WORKING_DIRECTORY }}    
 
       - name: Run tfsec with reviewdog output on the PR
         uses: reviewdog/action-tfsec@master
@@ -69,61 +67,61 @@ jobs:
           flags: -tee # Add debug flag to reviewdog
           #tfsec_flags: "" # Optional
   
-      # - name: 'Terraform init'
-      #   id: init
-      #   run: terraform init 
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: 'Terraform init'
+        id: init
+        run: terraform init 
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      # - name: terraform validate
-      #   uses: robertdebock/terraform-action@1.1.2
-      #   with:
-      #     action: validate
-      #     directory: ${{ env.WORKING_DIRECTORY }} 
+      - name: terraform validate
+        uses: robertdebock/terraform-action@1.1.2
+        with:
+          action: validate
+          directory: ${{ env.WORKING_DIRECTORY }} 
 
-      # - name: Terraform plan
-      #   id: plan
-      #   run: terraform plan -no-color
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -no-color
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
 
-      # - name: Terraform Plan Status
-      #   if: steps.plan.outcome == 'failure'
-      #   run: exit 1 
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1 
     ######################### LINTERS & TESTS ###################################
 
 
     ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
    
-    build-and-push-image:
-        runs-on: ubuntu-latest
-        permissions:
-          contents: read
-          packages: write
+    # build-and-push-image:
+    #     runs-on: ubuntu-latest
+    #     permissions:
+    #       contents: read
+    #       packages: write
 
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v3
+    #     steps:
+    #       - name: Checkout repository
+    #         uses: actions/checkout@v3
 
-          - name: Log in to the Container registry
-            uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-            with:
-              registry: ${{ env.REGISTRY }}
-              username: ${{ github.actor }}
-              password: ${{ secrets.GITHUB_TOKEN }}
+    #       - name: Log in to the Container registry
+    #         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+    #         with:
+    #           registry: ${{ env.REGISTRY }}
+    #           username: ${{ github.actor }}
+    #           password: ${{ secrets.GITHUB_TOKEN }}
 
-          - name: Extract metadata (tags, labels) for Docker
-            id: meta
-            uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-            with:
-              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    #       - name: Extract metadata (tags, labels) for Docker
+    #         id: meta
+    #         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+    #         with:
+    #           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-          - name: Build and push Docker image
-            uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-            with:
-              context: .
-              push: true
-              tags: ${{ steps.meta.outputs.tags }}
-              labels: ${{ steps.meta.outputs.labels }}
+    #       - name: Build and push Docker image
+    #         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+    #         with:
+    #           context: .
+    #           push: true
+    #           tags: ${{ steps.meta.outputs.tags }}
+    #           labels: ${{ steps.meta.outputs.labels }}
 
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
