@@ -49,7 +49,6 @@ jobs:
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
 
-
    create-pull-request:
         runs-on: ubuntu-latest
         name: create-pull-request
