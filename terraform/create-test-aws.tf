@@ -83,10 +83,10 @@ output "take_vpc_id" {
 
 
 
-resource "aws_security_group" "om-test-sg" {       # вообще всю работу с secority group заменить на модуль
+resource "aws_security_group" "om-test-sg" { # вообще всю работу с secority group заменить на модуль
   name        = "om-test-sg"
   description = "Traffic 5443 and 22"
-  vpc_id      = "${tolist(data.aws_vpcs.take_vpc_id.ids)[0]}"   
+  vpc_id      = tolist(data.aws_vpcs.take_vpc_id.ids)[0]
   ingress {
     description = "22"
     from_port   = 22
@@ -111,12 +111,12 @@ resource "aws_security_group" "om-test-sg" {       # вообще всю раб�
 
 }
 resource "aws_instance" "for-docker-om-test" {
-  ami             = "ami-005de95e8ff495156"
-  instance_type   = "t2.medium"
+  ami           = "ami-005de95e8ff495156"
+  instance_type = "t2.medium"
   #instance_type   = "t2.micro"
-  key_name        = "mykeypairsergey"
-  vpc_security_group_ids =  ["sg-045aa2f7aa7fe271d"]  #[ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]
-  subnet_id       = "subnet-07b2c20b11e01aeb6"   # этот хардкод заменить
+  key_name               = "mykeypairsergey"
+  vpc_security_group_ids = ["sg-045aa2f7aa7fe271d"]   #[ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]
+  subnet_id              = "subnet-07b2c20b11e01aeb6" # этот хардкод заменить
   #user_data       = file("inst_docker.sh")
   user_data = <<EOF
 #!/bin/bash
