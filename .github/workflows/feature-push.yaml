@@ -1,7 +1,7 @@
 name: 'plan feature-push'
 on:
   #pull_request:
-   push:
+  # push:
     branches:
      - feature
     # path:
@@ -14,7 +14,7 @@ env:
 jobs:
     ######################### LINTERS ###################################
 
-    lint-dockerfile:           #хороший линтер
+    lint-dockerfile:           
       name: lint-dockerfile
       runs-on: ubuntu-latest
       steps: 
@@ -28,25 +28,108 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
     
-      # - uses: hadolint/hadolint-action@v2.0.0     # !!!!
-      #   with:
-      #       dockerfile: Dockerfile
-
-      # - name: lint-dockerfile
-      #   uses: luke142367/Docker-Lint-Action@v1.0.0
-      #   with:
-      #     target: Dockerfile
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-      #     target: Yes
-
       - name: lint-dockerfile
         uses: hadolint/hadolint-action@v2.0.0
         with:
           dockerfile: Dockerfile
-    ######################### LINTERS ###################################
 
-     
+    ######################### LINTERS & TESTS ###################################
+  
+    test-terraform: 
+     name: terraform-tests
+     runs-on: ubuntu-latest
+     env:
+        WORKING_DIRECTORY: terraform
+  
+     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: 'Use terraform 1.1.7'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+
+      # - name: 'Terraform fmt'
+      #   id: fmt
+      #   run: terraform fmt -check
+      #   continue-on-error: true
+      #   working-directory: ${{ env.WORKING_DIRECTORY }}    
+
+      - name: Run tfsec with reviewdog output on the PR
+        uses: reviewdog/action-tfsec@master
+        with:
+          github_token: ${{ secrets.MY_GITHUB_TOKEN1 }}
+          working_directory: ${{ env.WORKING_DIRECTORY }} #./terraform # Change working directory
+          level: info # Get more output from reviewdog
+          reporter: github-pr-review # Change reviewdog reporter
+          #filter_mode: nofilter # Check all files, not just the diff
+          fail_on_error: true # Fail action if errors are found
+          flags: -tee # Add debug flag to reviewdog
+          #tfsec_flags: "" # Optional
+  
+      # - name: 'Terraform init'
+      #   id: init
+      #   run: terraform init 
+      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      # - name: terraform validate
+      #   uses: robertdebock/terraform-action@1.1.2
+      #   with:
+      #     action: validate
+      #     directory: ${{ env.WORKING_DIRECTORY }} 
+
+      # - name: Terraform plan
+      #   id: plan
+      #   run: terraform plan -no-color
+      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+
+
+      # - name: Terraform Plan Status
+      #   if: steps.plan.outcome == 'failure'
+      #   run: exit 1 
+    ######################### LINTERS & TESTS ###################################
+
+
+    ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+   
+    build-and-push-image:
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write
+
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v3
+
+          - name: Log in to the Container registry
+            uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+            with:
+              registry: ${{ env.REGISTRY }}
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: Extract metadata (tags, labels) for Docker
+            id: meta
+            uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+            with:
+              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+          - name: Build and push Docker image
+            uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+            with:
+              context: .
+              push: true
+              tags: ${{ steps.meta.outputs.tags }}
+              labels: ${{ steps.meta.outputs.labels }}
+
+
+######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+
+
+
     ######################### Create docker image ###################################
     # docker-build-and-push:
     #     name: build-docker-image
@@ -80,74 +163,67 @@ jobs:
 
 # https://localhost:5443/openmeetings/install?2  попробовать
 
- 
 
-  # create-pull-request:
-  #   runs-on: ubuntu-latest
-  #   name: create-pull-request
-  #   needs: 
-  #     - make_stru_test
-  #     - python-lint
-  #     - send-email
+  ######################### Create pull request ###################################
 
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v2
-  #       # with:
-  #       #   fetch-depth: 0
-  #       #   ref: feature
+    create-pull-request:
+        runs-on: ubuntu-latest
+        name: create-pull-request
+        needs: 
+          - lint-dockerfile
+          - test-terraform
+        
 
-
-
+        steps:
+          - name: Check out repository code
+            uses: actions/checkout@v2
+            # with:
+            #   fetch-depth: 0
+            #   ref: feature
 
 
+          - name: install github cli
+            run: |
+              sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+              sudo apt-add-repository https://cli.github.com/packages
+              sudo apt update
+              sudo apt install gh
 
-
-
-      # - name: install github cli
-      #   run: |
-      #     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-      #     sudo apt-add-repository https://cli.github.com/packages
-      #     sudo apt update
-      #     sudo apt install gh
-
-      # - name: auth to github
-      #   run: 
-      #     gh auth login --with-token ${{ secrets.GITH_TOKEN  }}
-    
-
-
-
-      # - name: Create Pull Request CLI
-      #   run: gh pr create --title "The new feature" --body "test and merge to feature pls" --base dev --head feature
-      #   env: 
-      #     GITHUB_TOKEN: ${{ secrets.GITH_TOKEN  }}
+          # - name: auth to github
+          #   run: 
+          #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
+        
+          - name: Create Pull Request CLI
+            run: gh pr create --title "The new feature" --body "test and merge to develop pls" --base develop --head feature
+            env: 
+              GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
 
 
 
-      # - name: Create Pull Request
-      #   uses: peter-evans/create-pull-request@v4
-      #   with:
-      #     token: ${{ secrets.GITH_TOKEN }}
-      #     commit-message: tralala
-      #     title: testtest
-      #     body: >
-      #       This PR is auto-generated by 
-      #       [create-pull-request](https://github.com/peter-evans/create-pull-request)
-      #     labels: report, automated pr
-          # base: feature
-          # branch: main
-          # draft: true
+
+          # - name: Create Pull Request
+          #   uses: peter-evans/create-pull-request@v4
+          #   with:
+          #     token: ${{ secrets.MY_GITHUB_TOKEN1 }}
+          #     commit-message: tralala
+          #     title: testtest
+          #     body: >
+          #       This PR is auto-generated by 
+          #       [create-pull-request](https://github.com/peter-evans/create-pull-request)
+          #     labels: report, automated pr
+          #     base: develop
+          #     branch: feature
+          # # draft: true
           
-          # reviewers: serwol
+          # # reviewers: serwol
           
-
-        # uses: devops-infra/action-pull-request@v0.4.2
-        # with:
-        #   github_token: ${{ secrets.GITH_TOKEN }}
-        #   title: 'Testt'
-        #   reviewer: serwol
-        #   source_branch: feature 
-        #   target_branch: main
-        #   draft: true
-        #   get_diff: true
+          # - name: Create Pull Request
+          #   uses: devops-infra/action-pull-request@v0.4.2
+          #   with:
+          #     github_token: ${{ secrets.MY_GITHUB_TOKEN1 }}
+          #     title: 'Testt'
+          #     reviewer: serwol
+          #     source_branch: feature 
+          #     target_branch: develop
+          #     draft: true
+          #     get_diff: true

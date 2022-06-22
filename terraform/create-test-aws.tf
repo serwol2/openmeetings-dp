@@ -16,61 +16,77 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-1" # del for pipeline
   #access_key = "AKIAT7EVD2KBERXXXXX"
   #secret_key = "rnucH1/Th8CHKIgPa4W+PCYEEZXXXXXXXXXX"
 }
 
 ########################################## create ec2 with kurento docker ###########################################
-resource "aws_security_group" "om-test-sg-kms" {       # 2 вообще всю работу с secority group заменить на модуль
-  name        = "om-test-sg-kms"
-  description = "22, 8888"
-  vpc_id      = "vpc-0623cf583004f81f0"   # 2 этот хардкод потом заменить 
+# resource "aws_security_group" "om-test-sg-kms" {       # 2 вообще всю работу с secority group заменить на модуль
+#   name        = "om-test-sg-kms"
+#   description = "22, 8888"
+#   vpc_id      = "vpc-0623cf583004f81f0"   # 2 этот хардкод потом заменить 
 
-  ingress {
-    description = "22"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+#   ingress {
+#     description = "22"
+#     from_port   = 22
+#     to_port     = 22
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 
-  ingress {
-    description = "8888"
-    from_port   = 8888
-    to_port     = 8888
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-}
-resource "aws_instance" "for-curento-om-test" {   # убрать нафиг потом паблик ip и поубирать хардкоды
-  ami             = "ami-0c4f7023847b90238"
-  instance_type   = "t2.micro"
-  key_name        = "mykeypairsergey"
-  security_groups = [ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg-kms.id}" ]
-  #vpc_security_group_ids = aws_security_group.om-test-sg.id
-  subnet_id       = "subnet-0ee2ec2a28a4e4a0f"
-  user_data       = file("inst-kms.sh")
-  tags = {
-    Name = "for-curento-om-test"
-  }
+#   ingress {
+#     description = "8888"
+#     from_port   = 8888
+#     to_port     = 8888
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   egress {
+#     from_port        = 0
+#     to_port          = 0
+#     protocol         = "-1"
+#     cidr_blocks      = ["0.0.0.0/0"]
+#     ipv6_cidr_blocks = ["::/0"]
+#   }
+# }
+# resource "aws_instance" "for-curento-om-test" {   
+#   ami             = "ami-0c4f7023847b90238"
+#   instance_type   = "t2.micro"
+#   key_name        = "mykeypairsergey"
+#   #associate_public_ip_address = false
+#   vpc_security_group_ids = [ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg-kms.id}" ]
+#   #vpc_security_group_ids = aws_security_group.om-test-sg.id
+#   subnet_id       = "subnet-0ee2ec2a28a4e4a0f"
+#   user_data       = <<EOF
+# #!/bin/bash
+# sudo apt update && sudo apt install -y docker.io
+# sudo docker run -d --name kms -p 8888:8888 kurento/kurento-media-server:latest
+# EOF
+#   tags = {
+#     Name = "for-curento-om-test"
+#   }
 
-}
+# }
 ########################################## create ec2 with kurento docker ###########################################
 
 
 ########################################## create ec2 with test-om docker ###########################################
+data "aws_vpcs" "take_vpc_id" {
+  tags = {
+    Name = "om-vpc"
+  }
+}
+output "take_vpc_id" {
+  value = data.aws_vpcs.take_vpc_id.ids
+}
+
+
+
 resource "aws_security_group" "om-test-sg" {       # вообще всю работу с secority group заменить на модуль
   name        = "om-test-sg"
   description = "Traffic 5443 and 22"
-  vpc_id      = "vpc-0623cf583004f81f0"   # этот хардкод потом заменить 
+  vpc_id      = "${tolist(data.aws_vpcs.take_vpc_id.ids)[0]}"   
   ingress {
     description = "22"
     from_port   = 22
@@ -99,20 +115,22 @@ resource "aws_instance" "for-docker-om-test" {
   instance_type   = "t2.medium"
   #instance_type   = "t2.micro"
   key_name        = "mykeypairsergey"
-  security_groups = [ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]
-  subnet_id       = "subnet-0ee2ec2a28a4e4a0f"   # этот хардкод заменить
+  vpc_security_group_ids =  ["sg-045aa2f7aa7fe271d"]  #[ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]
+  subnet_id       = "subnet-07b2c20b11e01aeb6"   # этот хардкод заменить
   #user_data       = file("inst_docker.sh")
   user_data = <<EOF
 #!/bin/bash
 sudo apt update && sudo apt install docker.io -y
-docker pull ghcr.io/serwol2/openmeetings-dp/openmeetings-dp:feature-v5.0.0-full
+sudo docker run -d --name om-test -p 5443:5443 \
+  -e OM_TYPE="min" \
+  -e OM_KURENTO_WS_URL="ws://10.0.1.15:8888/kurento" \
+  -it ghcr.io/serwol2/openmeetings-dp:develop
 EOF
   tags = {
     Name = "for-docker-om-test"
   }
 
 }
-########################################## create ec2 with test-om docker ###########################################
 
 
 
