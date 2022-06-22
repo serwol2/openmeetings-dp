@@ -15,7 +15,7 @@ jobs:
     
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
    build-and-push-image:
-        if: startsWith(github.event.head_commit.message, 'Merge pull request')
+        # if: startsWith(github.event.head_commit.message, 'Merge pull request') (не забыть раскомментить!!!)
         runs-on: ubuntu-latest
         permissions:
           contents: read
