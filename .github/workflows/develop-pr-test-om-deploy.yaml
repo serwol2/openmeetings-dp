@@ -1,9 +1,9 @@
 name: 'plan feature-push'
 on:
    #pull_request:
-   push:
+   # push:
     branches:
-     - develop #это чтобы оно не запустилось в develop , потом поменять!!!
+   #  - develop #это чтобы оно не запустилось в develop , потом поменять!!!
     # path:
     #   - terraform/**
 env:
