@@ -1,9 +1,9 @@
 name: 'deploy-to-aws-ecs'
 on:
    #pull_request:
-   #push:
+   push:
     branches:
-    # - feature #потом сменить на нужный, main
+     - main #потом сменить на нужный, main
 env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
