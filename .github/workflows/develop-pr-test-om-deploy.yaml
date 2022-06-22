@@ -48,6 +48,41 @@ jobs:
           #     labels: ${{ steps.meta.outputs.labels }}
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+
+
+create-pull-request:
+        runs-on: ubuntu-latest
+        name: create-pull-request
+        needs: 
+          - build-and-push-image
+
+        steps:
+          - name: Check out repository code
+            uses: actions/checkout@v2
+            # with:
+            #   fetch-depth: 0
+            #   ref: feature
+
+          - name: install github cli
+            run: |
+              sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+              sudo apt-add-repository https://cli.github.com/packages
+              sudo apt update
+              sudo apt install gh
+
+          # - name: auth to github
+          #   run: 
+          #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
+        
+          - name: Create Pull Request CLI
+            run: gh pr create --title "New docker image ready to be deployed" --body "test and merge to main pls" --base develop --head feature
+            env: 
+              GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
+
+######################### Create pull request ###################################
+
+
+
     # make_stru_test:
     #   name: running-terraform-for-deploy
     #   runs-on: ubuntu-latest
@@ -149,37 +184,7 @@ jobs:
 
 ######################### Create pull request ###################################
 
-   create-pull-request:
-        runs-on: ubuntu-latest
-        name: create-pull-request
-        needs: 
-          - build-and-push-image
-
-        steps:
-          - name: Check out repository code
-            uses: actions/checkout@v2
-            # with:
-            #   fetch-depth: 0
-            #   ref: feature
-
-
-          - name: install github cli
-            run: |
-              sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-              sudo apt-add-repository https://cli.github.com/packages
-              sudo apt update
-              sudo apt install gh
-
-                  # - name: auth to github
-                  #   run: 
-                  #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
-                
-                  - name: Create Pull Request CLI
-                    run: gh pr create --title "New docker image ready to be deployed" --body "test and merge to main pls" --base develop --head feature
-                    env: 
-                      GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
-
-######################### Create pull request ###################################
+   
 
   ######################### Create pull request ###################################
 
