@@ -1,7 +1,6 @@
 name: 'plan feature-push'
 on:
-    push:       #pull_request_review:
-    #type: [submitted]                   # push:
+   push:          #pull_request_review:  #type: [submitted]                   # push:
     branches:
      - develop                       
 env:
