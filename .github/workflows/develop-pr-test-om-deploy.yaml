@@ -12,7 +12,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 jobs:
     
-######################### Create docker image ########## V1 #########################
+######################### Create docker image ########## V1 ##########################
   # build-and-push-image:
   #       # if: startsWith(github.event.head_commit.message, 'Merge pull request') # (!!!)
   #       runs-on: ubuntu-latest
