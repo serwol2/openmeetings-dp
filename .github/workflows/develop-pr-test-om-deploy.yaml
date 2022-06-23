@@ -51,6 +51,8 @@ jobs:
 
   make_test_instance:
       name: running-terraform-for-deploy
+      needs: 
+         - build-and-push-image
       runs-on: ubuntu-latest
       env:
         WORKING_DIRECTORY: terraform
@@ -108,36 +110,39 @@ jobs:
           auto_approve: true
 
       - name: test output
-        run:  address=$(terraform output ec2instance)   
+        run:  |
+          address=$(terraform output ec2instance)
+          echo $address   
 
 ######################### Create pull request ###################################
-  create-pull-request:
-      runs-on: ubuntu-latest
-      name: create-pull-request
-      needs: 
-        - build-and-push-image
+  # create-pull-request:
+  #     runs-on: ubuntu-latest
+  #     name: create-pull-request
+  #     needs: 
+  #       #- build-and-push-image
+  #       - make_test_instance
 
-      steps:
-        - name: Check out repository code
-          uses: actions/checkout@v2
-          # with:
-          #   fetch-depth: 0
-          #   ref: feature
+  #     steps:
+  #       - name: Check out repository code
+  #         uses: actions/checkout@v2
+  #         # with:
+  #         #   fetch-depth: 0
+  #         #   ref: feature
 
-        - name: install github cli
-          run: |
-            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-            sudo apt-add-repository https://cli.github.com/packages
-            sudo apt update
-            sudo apt install gh
+  #       - name: install github cli
+  #         run: |
+  #           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+  #           sudo apt-add-repository https://cli.github.com/packages
+  #           sudo apt update
+  #           sudo apt install gh
 
-        # - name: auth to github
-        #   run: 
-        #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
+  #       # - name: auth to github
+  #       #   run: 
+  #       #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
       
-        - name: Create Pull Request CLI
-          run: gh pr create --title "New docker image ready to be deployed" --body "test and merge to main pls" --base main --head develop
-          env: 
-            GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
+  #       - name: Create Pull Request CLI
+  #         run: gh pr create --title "New docker image ready to be deployed" --body "test and merge to main pls" --base main --head develop
+  #         env: 
+  #           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
 
 ######################### Create pull request ###################################
