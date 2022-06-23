@@ -10,33 +10,32 @@ env:
   MYAWS_REGION: "us-east-1"
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  #REGISTRY: ghcr.io
 jobs:
     
-######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
-  build-and-push-image:
-        # if: startsWith(github.event.head_commit.message, 'Merge pull request') (не забыть раскомментить!!!)
-        runs-on: ubuntu-latest
-        permissions:
-          contents: read
-          packages: write
+######################### Create docker image ########## V1 #########################
+  # build-and-push-image:
+  #       # if: startsWith(github.event.head_commit.message, 'Merge pull request') # (!!!)
+  #       runs-on: ubuntu-latest
+  #       permissions:
+  #         contents: read
+  #         packages: write
 
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v3
+  #       steps:
+  #         - name: Checkout repository
+  #           uses: actions/checkout@v3
 
-          - name: Log in to the Container registry
-            uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-            with:
-              registry: ${{ env.REGISTRY }}
-              username: ${{ github.actor }}
-              password: ${{ secrets.GITHUB_TOKEN }}
+  #         - name: Log in to the Container registry
+  #           uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+  #           with:
+  #             registry: ${{ env.REGISTRY }}
+  #             username: ${{ github.actor }}
+  #             password: ${{ secrets.GITHUB_TOKEN }}
 
   #         - name: Extract metadata (tags, labels) for Docker
   #           id: meta
   #           uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
   #           with:
-  #             images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+  #              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
   #         - name: Build and push Docker image
   #           uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -47,10 +46,44 @@ jobs:
   #             tags: "develop"  #${{ steps.meta.outputs.tags }}  проверить это
   #             labels: ${{ steps.meta.outputs.labels }}
 
-######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+######################### Create docker image ########## V1 #########################
+
+######################### Create docker image ############ V2 ######################
+  build-and-push-image:
+      if: startsWith(github.event.head_commit.message, 'Merge pull request') 
+      name: build-docker-image
+      runs-on: ubuntu-latest  
+      steps:      
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.MY_GITHUB_TOKEN1 }}
+      
+      # - name: Build & Push to GitHub Package 
+      #   uses: opspresso/action-docker@master  
+      #   with:
+      #     args: --docker
+      #   env:
+      #     PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+      #     REGISTRY: "docker.pkg.github.com"
+      #     TAG_NAME: "develop"
+      #     #DOCKERFILE: ./Dockerfile
+      #     DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
+      #     #IMAGE_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    ######################### Create docker image ############ V2 #######################
+
+
+
 
   make_test_instance:
       name: running-terraform-for-deploy
+      needs: 
+         - build-and-push-image
       runs-on: ubuntu-latest
       env:
         WORKING_DIRECTORY: terraform
@@ -76,46 +109,19 @@ jobs:
         run: terraform init 
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      # - name: terraform validate
-      #   uses: robertdebock/terraform-action@1.1.2
-      #   with:
-      #     action: validate
-      #     directory: ${{ env.WORKING_DIRECTORY }} 
-
-      # - name: 'Terraform plan'
-      #   id: plan
-      #   run: terraform plan -no-color
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
-
-      # - name: Terraform Plan Status
-      #   if: steps.plan.outcome == 'failure'
-      #   run: exit 1 
-
-      # - name: 'Terraform apply'
-      #   id: apply
-      #   run: terraform apply -auto-approve -input=false
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
-
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_wrapper: false
-
       - name: Terraform apply
         uses: dflook/terraform-apply@v1
         with:
           path: ${{ env.WORKING_DIRECTORY }}
           auto_approve: true
 
-      - name: test output
-        run:  address=$(terraform output ec2instance)   
-
 ######################### Create pull request ###################################
   create-pull-request:
       runs-on: ubuntu-latest
       name: create-pull-request
       needs: 
-        - build-and-push-image
+        #- build-and-push-image
+        - make_test_instance
 
       steps:
         - name: Check out repository code
@@ -131,9 +137,6 @@ jobs:
             sudo apt update
             sudo apt install gh
 
-        # - name: auth to github
-        #   run: 
-        #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
       
         - name: Create Pull Request CLI
           run: gh pr create --title "New docker image ready to be deployed" --body "test and merge to main pls" --base main --head develop
