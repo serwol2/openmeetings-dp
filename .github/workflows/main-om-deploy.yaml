@@ -3,7 +3,7 @@ on:
    #pull_request:
    push:
     branches:
-     - main #потом сменить на нужный, main
+     - main 
 env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
@@ -11,252 +11,70 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   #GITHUB_REPOSITORY: 
- #MYAWS_REGION: "us-east
+  MYAWS_REGION: "us-east-1"
   #ECR_REPOSITORY: "om"    
   #REGISTRY: ghcr.io
 
 jobs:
-    ######################### Create docker image (фиговый) ###################################
-    # docker-build-and-push:
-    #     name: build-docker-image
-    #     runs-on: ubuntu-latest  
-    #     # needs: 
-    #     #   - lint-dockerfile
-    #     steps:      
-    #     - name: Checkout repository
-    #       uses: actions/checkout@v3
-
-    #     # - name: Login to GitHub Container Registry
-    #     #   uses: docker/login-action@v1
-    #     #   with:
-    #     #     registry: ghcr.io
-    #     #     username: ${{ github.actor }}
-    #     #     password: ${{ secrets.GITHUB_TOKEN }}
-        
-    #     - name: Build & Push to GitHub Package 
-    #       uses: opspresso/action-docker@master  
-    #       with:
-    #         args: --docker
-    #       env:
-    #         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    #         REGISTRY: "docker.pkg.github.com"
-    #         TAG_NAME: "feature-v5.0.0-full"
-    #         #DOCKERFILE: ./Dockerfile
-    #         DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
-    #         #IMAGE_NAME: openmeetings-dp
-    # ######################### Create docker image ###################################
-   
-    ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
-   
-    # build-and-push-image:
-    #     runs-on: ubuntu-latest
-    #     permissions:
-    #       contents: read
-    #       packages: write
-
-    #     steps:
-    #       - name: Checkout repository
-    #         uses: actions/checkout@v3
-
-    #       - name: Log in to the Container registry
-    #         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-    #         with:
-    #           registry: ${{ env.REGISTRY }}
-    #           username: ${{ github.actor }}
-    #           password: ${{ secrets.GITHUB_TOKEN }}
-
-    #       - name: Extract metadata (tags, labels) for Docker
-    #         id: meta
-    #         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-    #         with:
-    #           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-    #       - name: Build and push Docker image
-    #         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-    #         with:
-    #           context: .
-    #           push: true
-    #           tags: ${{ steps.meta.outputs.tags }}
-    #           labels: ${{ steps.meta.outputs.labels }}
-
-
-######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
 
 ######################### new tag docker image #########################
-   docker-push-to-aws-ecr:  
-          name: change-tag-docker-image
-          runs-on: ubuntu-latest
-          steps: 
-            - uses: shrink/actions-docker-registry-tag@v2
-              with:
-                token: ${{secrets.MY_GITHUB_TOKEN1}}
-                registry: ghcr.io
-                repository: '${{ github.repository }}'
-                target: latest
-                tags: new
+  #  docker-push-to-aws-ecr:  
+  #         name: change-tag-docker-image
+  #         runs-on: ubuntu-latest
+  #         steps: 
+  #           - uses: shrink/actions-docker-registry-tag@v2
+  #             with:
+  #               token: ${{secrets.MY_GITHUB_TOKEN1}}
+  #               registry: ghcr.io
+  #               repository: '${{ github.repository }}'
+  #               target: pr-8
+  #               tags: develop
 ######################### new tag docker image #########################
 
+######################### push docker image to AWS ECR ###################################
+    push-dockerimage-ecr:
+        runs-on: ubuntu-latest
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # make_stru_test:
-    #   name: running-terraform-for-deploy
-    #   runs-on: ubuntu-latest
-    #   env:
-    #     WORKING_DIRECTORY: terraform
-  
-    #   steps:
-    #   - name: 'Checkout'
-    #     uses: actions/checkout@v3
-
-    #   - name: Configure AWS Credentials
-    #     uses: aws-actions/configure-aws-credentials@v1 
-    #     with:
-    #       aws-access-key-id: ${{env.AWS_ACCESS_KEY}}
-    #       aws-secret-access-key: ${{env.AWS_SECRET_KEY}}
-    #       aws-region: ${{env.MYAWS_REGION}}
-   
-      # - name: 'Use terraform 1.1.7'
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: 1.1.7
-   
-      
-      # - name: 'Terraform init'
-      #   id: init
-      #   run: terraform init 
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
-      
-      # - name: terraform validate
-      #   uses: robertdebock/terraform-action@1.1.2
-      #   with:
-      #     action: validate
-      #     directory: ${{ env.WORKING_DIRECTORY }} 
-      
-      # - name: 'Terraform plan'
-      #   id: plan
-      #   run: terraform plan -no-color
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
-      
-      # - name: Terraform Plan Status
-      #   if: steps.plan.outcome == 'failure'
-      #   run: exit 1 
-
-      # - name: 'Terraform apply'
-      #   id: apply
-      #   run: terraform apply -auto-approve -input=false
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
-
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_wrapper: false
-
-      # - name: Terraform apply
-      #   uses: dflook/terraform-apply@v1
-      #   with:
-      #     path: ${{ env.WORKING_DIRECTORY }}
-      #     auto_approve: true
-
-      # - name: test output
-      #   run:  address=$(terraform output ec2instance)   
-
-
-
-
-
-
-    ######################### Deploy OM-test to AWS ###################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ######################### Deploy OM-test to AWS ###################################
-
-
-
-  ######################### Create pull request ###################################
-
-    # create-pull-request:
-    #     runs-on: ubuntu-latest
-    #     name: create-pull-request
-    #     needs: 
-    #       - lint-dockerfile
-    #       - test-terraform
+        steps:
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
+            aws-secret-access-key: ${{ env.AWS_SECRET_KEY }}
+            aws-region: ${{ env.MYAWS_REGION }}
         
-
-    #     steps:
-    #       - name: Check out repository code
-    #         uses: actions/checkout@v2
-    #         # with:
-    #         #   fetch-depth: 0
-    #         #   ref: feature
-
-
-    #       - name: install github cli
-    #         run: |
-    #           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-    #           sudo apt-add-repository https://cli.github.com/packages
-    #           sudo apt update
-    #           sudo apt install gh
-
-    #       # - name: auth to github
-    #       #   run: 
-    #       #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
+        - name: install-aws-cli
+          uses: unfor19/install-aws-cli-action@v1.0.3
+          with:
+            version: 2     # default
+            verbose: false # default
+            arch: amd64    # allowed values: amd64, arm64
+            rootdir: ""    # defaults to "PWD"
+            workdir: ""    # defaults to "PWD/unfor19-awscli"
         
-    #       - name: Create Pull Request CLI
-    #         run: gh pr create --title "The new feature" --body "test and merge to develop pls" --base develop --head feature
-    #         env: 
-    #           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
+        - name: Pull Docker image
+          run: docker pull ghcr.io/serwol2/openmeetings-dp:develop
+
+        - name: Name Docker image
+          run: docker images  
+
+        - name: push-image
+          run: |
+              aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b0e2l4e5
+              docker tag ghcr.io/serwol2/openmeetings-dp:develop public.ecr.aws/b0e2l4e5/openmeetings-dp:${{ github.sha }}
+              docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:${{ github.sha }}
+        #latest      ${ github.sha }
+
+        - name: update-cluster
+          run: aws ecs update-service --service web-service --cluster om-cluster --desired-count 1 --force-new-deployment
+
+ ########################## push docker image to AWS ECR ###################################
 
 
 
 
-    #       # - name: Create Pull Request
-    #       #   uses: peter-evans/create-pull-request@v4
-    #       #   with:
-    #       #     token: ${{ secrets.MY_GITHUB_TOKEN1 }}
-    #       #     commit-message: tralala
-    #       #     title: testtest
-    #       #     body: >
-    #       #       This PR is auto-generated by 
-    #       #       [create-pull-request](https://github.com/peter-evans/create-pull-request)
-    #       #     labels: report, automated pr
-    #       #     base: develop
-    #       #     branch: feature
-    #       # # draft: true
-          
-    #       # # reviewers: serwol
-          
-    #       # - name: Create Pull Request
-    #       #   uses: devops-infra/action-pull-request@v0.4.2
-    #       #   with:
-    #       #     github_token: ${{ secrets.MY_GITHUB_TOKEN1 }}
-    #       #     title: 'Testt'
-    #       #     reviewer: serwol
-    #       #     source_branch: feature 
-    #       #     target_branch: develop
-    #       #     draft: true
-    #       #     get_diff: true
+
+
+
+
+######################### Deploy OM-test to AWS ###################################
