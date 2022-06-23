@@ -65,7 +65,7 @@ jobs:
         #       docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
 
         - name: update-cluster
-          run: aws ecs update-service --service web-service --cluster om-cluster --force-new-deployment
+          run: aws ecs update-service --service web-service --cluster om-cluster --desired-count 1 --force-new-deployment
 
  ########################## push docker image to AWS ECR ###################################
 
