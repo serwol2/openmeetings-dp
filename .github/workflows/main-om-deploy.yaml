@@ -69,12 +69,3 @@ jobs:
           run: aws ecs update-service --service web-service --cluster om-cluster --desired-count 1 --force-new-deployment
 
  ########################## push docker image to AWS ECR ###################################
-
-
-
-
-
-
-
-
-######################### Deploy OM-test to AWS ###################################
