@@ -27,7 +27,7 @@ jobs:
   #               tags: develop
 ######################### new tag docker image #########################
 
-######################### push docker image to AWS ECR ###################################
+######################### push docker image to AWS ECR ##################################
     push-dockerimage-ecr:
         if: startsWith(github.event.head_commit.message, 'Merge pull request')
         runs-on: ubuntu-latest
