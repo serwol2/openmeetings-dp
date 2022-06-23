@@ -62,8 +62,8 @@ jobs:
           run: |
               aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b0e2l4e5
               docker tag ghcr.io/serwol2/openmeetings-dp:develop public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
-              docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
-        #latest
+              docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:"${ github.sha }"
+        #latest      ${ github.sha }
 
         - name: update-cluster
           run: aws ecs update-service --service web-service --cluster om-cluster --desired-count 1 --force-new-deployment
