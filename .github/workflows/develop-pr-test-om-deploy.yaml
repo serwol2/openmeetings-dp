@@ -78,41 +78,11 @@ jobs:
         run: terraform init 
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      # - name: terraform validate
-      #   uses: robertdebock/terraform-action@1.1.2
-      #   with:
-      #     action: validate
-      #     directory: ${{ env.WORKING_DIRECTORY }} 
-
-      # - name: 'Terraform plan'
-      #   id: plan
-      #   run: terraform plan -no-color
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
-
-      # - name: Terraform Plan Status
-      #   if: steps.plan.outcome == 'failure'
-      #   run: exit 1 
-
-      # - name: 'Terraform apply'
-      #   id: apply
-      #   run: terraform apply -auto-approve -input=false
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
-
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_wrapper: false
-
       - name: Terraform apply
         uses: dflook/terraform-apply@v1
         with:
           path: ${{ env.WORKING_DIRECTORY }}
           auto_approve: true
-
-      - name: test output
-        run:  |
-          address=$(terraform output ec2instance)
-          echo $address   
 
 ######################### Create pull request ###################################
   # create-pull-request:
