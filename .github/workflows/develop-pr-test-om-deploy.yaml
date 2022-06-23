@@ -38,17 +38,19 @@ jobs:
             with:
               images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-          # - name: Build and push Docker image
-          #   uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-          #   with:
-          #     context: .
-          #     push: true
-          #     build-args: "BUILD_TYPE=full"
-          #     tags: "develop"  #${{ steps.meta.outputs.tags }}  проверить это
-          #     labels: ${{ steps.meta.outputs.labels }}
+          - name: Build and push Docker image
+            uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+            with:
+              context: .
+              push: true
+              build-args: "BUILD_TYPE=full"
+              tags: "develop"  #${{ steps.meta.outputs.tags }}  проверить это
+              labels: ${{ steps.meta.outputs.labels }}
 
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
 
+
+######################### Create pull request ###################################
    create-pull-request:
         runs-on: ubuntu-latest
         name: create-pull-request
@@ -146,40 +148,7 @@ jobs:
 ######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
 
 
-    ######################### push docker image to AWS ECR ###################################
-    # push-dockerimage-ecr:
-    #     runs-on: ubuntu-latest
-
-    #     steps:
-    #     - name: Configure AWS Credentials
-    #       uses: aws-actions/configure-aws-credentials@v1
-    #       with:
-    #         aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
-    #         aws-secret-access-key: ${{ env.AWS_SECRET_KEY }}
-    #         aws-region: ${{ env.MYAWS_REGION }}
-        
-    #     - name: install-aws-cli
-    #       uses: unfor19/install-aws-cli-action@v1.0.3
-    #       with:
-    #         version: 2     # default
-    #         verbose: false # default
-    #         arch: amd64    # allowed values: amd64, arm64
-    #         rootdir: ""    # defaults to "PWD"
-    #         workdir: ""    # defaults to "PWD/unfor19-awscli"
-        
-    #     - name: Pull Docker image
-    #       run: docker pull ghcr.io/serwol2/openmeetings-dp:develop
-
-    #     # - name: Name Docker image
-    #     #   run: docker images  
-
-    #     - name: push-image
-    #       run: |
-    #           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b0e2l4e5
-    #           docker tag ghcr.io/serwol2/openmeetings-dp:develop public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
-    #           docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:latest
-
-    ########################## push docker image to AWS ECR ###################################
+  
 
 ######################### Create pull request ###################################
 
