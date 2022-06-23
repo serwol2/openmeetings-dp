@@ -10,12 +10,11 @@ env:
   MYAWS_REGION: "us-east-1"
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  #REGISTRY: ghcr.io
 jobs:
     
-######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+######################### Create docker image ########## V1 #########################
   # build-and-push-image:
-  #       # if: startsWith(github.event.head_commit.message, 'Merge pull request') (не забыть раскомментить!!!)
+  #       # if: startsWith(github.event.head_commit.message, 'Merge pull request') # (!!!)
   #       runs-on: ubuntu-latest
   #       permissions:
   #         contents: read
@@ -47,15 +46,13 @@ jobs:
   #             tags: "develop"  #${{ steps.meta.outputs.tags }}  проверить это
   #             labels: ${{ steps.meta.outputs.labels }}
 
-######################### Create docker image ########## Здесь правильной!! Брать отсюда!! #########################
+######################### Create docker image ########## V1 #########################
 
-######################### Create docker image ###################################
+######################### Create docker image ############ V2 ######################
   build-and-push-image:
-    # if: startsWith(github.event.head_commit.message, 'Merge pull request') (не забыть раскомментить!!!)
+      if: startsWith(github.event.head_commit.message, 'Merge pull request') 
       name: build-docker-image
       runs-on: ubuntu-latest  
-      # needs: 
-      #   - lint-dockerfile
       steps:      
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -67,18 +64,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.MY_GITHUB_TOKEN1 }}
       
-      - name: Build & Push to GitHub Package 
-        uses: opspresso/action-docker@master  
-        with:
-          args: --docker
-        env:
-          PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
-          REGISTRY: "docker.pkg.github.com"
-          TAG_NAME: "develop"
-          #DOCKERFILE: ./Dockerfile
-          DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
-          #IMAGE_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-    ######################### Create docker image ###################################
+      # - name: Build & Push to GitHub Package 
+      #   uses: opspresso/action-docker@master  
+      #   with:
+      #     args: --docker
+      #   env:
+      #     PASSWORD: ${{ secrets.MY_GITHUB_TOKEN1 }}
+      #     REGISTRY: "docker.pkg.github.com"
+      #     TAG_NAME: "develop"
+      #     #DOCKERFILE: ./Dockerfile
+      #     DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
+      #     #IMAGE_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    ######################### Create docker image ############ V2 #######################
 
 
 
@@ -119,34 +116,31 @@ jobs:
           auto_approve: true
 
 ######################### Create pull request ###################################
-  # create-pull-request:
-  #     runs-on: ubuntu-latest
-  #     name: create-pull-request
-  #     needs: 
-  #       #- build-and-push-image
-  #       - make_test_instance
+  create-pull-request:
+      runs-on: ubuntu-latest
+      name: create-pull-request
+      needs: 
+        #- build-and-push-image
+        - make_test_instance
 
-  #     steps:
-  #       - name: Check out repository code
-  #         uses: actions/checkout@v2
-  #         # with:
-  #         #   fetch-depth: 0
-  #         #   ref: feature
+      steps:
+        - name: Check out repository code
+          uses: actions/checkout@v2
+          # with:
+          #   fetch-depth: 0
+          #   ref: feature
 
-  #       - name: install github cli
-  #         run: |
-  #           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-  #           sudo apt-add-repository https://cli.github.com/packages
-  #           sudo apt update
-  #           sudo apt install gh
+        - name: install github cli
+          run: |
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+            sudo apt-add-repository https://cli.github.com/packages
+            sudo apt update
+            sudo apt install gh
 
-  #       # - name: auth to github
-  #       #   run: 
-  #       #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
       
-  #       - name: Create Pull Request CLI
-  #         run: gh pr create --title "New docker image ready to be deployed" --body "test and merge to main pls" --base main --head develop
-  #         env: 
-  #           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
+        - name: Create Pull Request CLI
+          run: gh pr create --title "New docker image ready to be deployed" --body "test and merge to main pls" --base main --head develop
+          env: 
+            GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN1  }}
 
 ######################### Create pull request ###################################

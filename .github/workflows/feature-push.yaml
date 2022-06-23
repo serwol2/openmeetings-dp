@@ -7,8 +7,6 @@ env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
   WORKING_DIRECTORY: ./terraform
-  #GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
-  #REGISTRY: ghcr.io
 jobs:
     ######################### LINTERS ###################################
 
@@ -101,9 +99,6 @@ jobs:
         steps:
           - name: Check out repository code
             uses: actions/checkout@v2
-            # with:
-            #   fetch-depth: 0
-            #   ref: feature
 
 
           - name: install github cli
@@ -113,9 +108,6 @@ jobs:
               sudo apt update
               sudo apt install gh
 
-          # - name: auth to github
-          #   run: 
-          #     gh auth login --with-token ${{ secrets.MY_GITHUB_TOKEN1 }}
         
           - name: Create Pull Request CLI
             run: gh pr create --title "The new feature" --body "test and merge to develop pls" --base develop --head feature

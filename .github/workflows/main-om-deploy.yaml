@@ -1,19 +1,15 @@
 name: 'deploy-to-aws-ecs'
 on:
-   #pull_request:
    push:
     branches:
-     - main11
+     - main
 env:
   AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID}}
   AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
   GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN1}}
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  #GITHUB_REPOSITORY: 
   MYAWS_REGION: "us-east-1"
-  #ECR_REPOSITORY: "om"    
-  #REGISTRY: ghcr.io
 
 jobs:
 
@@ -33,6 +29,7 @@ jobs:
 
 ######################### push docker image to AWS ECR ###################################
     push-dockerimage-ecr:
+        if: startsWith(github.event.head_commit.message, 'Merge pull request')
         runs-on: ubuntu-latest
 
         steps:
@@ -63,9 +60,8 @@ jobs:
               aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b0e2l4e5
               docker tag ghcr.io/serwol2/openmeetings-dp:develop public.ecr.aws/b0e2l4e5/openmeetings-dp:${{ github.sha }}
               docker push public.ecr.aws/b0e2l4e5/openmeetings-dp:${{ github.sha }}
-        #latest      ${ github.sha }
-
+        
         - name: update-cluster
-          run: aws ecs update-service --service web-service --cluster om-cluster --desired-count 1 --force-new-deployment
+          run: aws ecs update-service --service web-service --cluster om-cluster --force-new-deployment
 
  ########################## push docker image to AWS ECR ###################################
