@@ -77,7 +77,7 @@ jobs:
           TAG_NAME: "develop"
           #DOCKERFILE: ./Dockerfile
           DOCKER_BUILD_ARGS: --build-arg BUILD_TYPE=full   #min
-          IMAGE_NAME: openmeetings-dp
+          IMAGE_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
     ######################### Create docker image ###################################
 
 
