@@ -117,7 +117,7 @@ resource "aws_instance" "for-docker-om-test" {
   key_name               = "mykeypairsergey"
   #security_groups = ["allow-all-ec2"]
   vpc_security_group_ids =  ["sg-0da8cb2601fb53d41"]   #[ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]# delete hardcode!!!
-# add subnet!
+
 
   subnet_id              = "subnet-047fa623bcb3e5337" # delete hardcode!!!
   #user_data       = file("inst_docker.sh")
