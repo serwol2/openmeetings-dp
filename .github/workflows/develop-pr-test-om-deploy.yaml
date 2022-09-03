@@ -43,7 +43,7 @@ jobs:
   #             context: .
   #             push: true
   #             build-args: "BUILD_TYPE=full"
-  #             tags: "develop"  #${{ steps.meta.outputs.tags }}  проверить это
+  #             tags: "develop"  #${{ steps.meta.outputs.tags }}  test it!!
   #             labels: ${{ steps.meta.outputs.labels }}
 
 ######################### Create docker image ########## V1 #########################
