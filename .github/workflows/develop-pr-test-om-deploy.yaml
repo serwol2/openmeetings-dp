@@ -43,7 +43,7 @@ jobs:
   #             context: .
   #             push: true
   #             build-args: "BUILD_TYPE=full"
-  #             tags: "develop"  #${{ steps.meta.outputs.tags }}  проверить это
+  #             tags: "develop"  #${{ steps.meta.outputs.tags }}  test it!!
   #             labels: ${{ steps.meta.outputs.labels }}
 
 ######################### Create docker image ########## V1 #########################
@@ -135,7 +135,7 @@ jobs:
             sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
             sudo apt-add-repository https://cli.github.com/packages
             sudo apt update
-            sudo apt install gh
+            sudo apt install gh  
 
       
         - name: Create Pull Request CLI
