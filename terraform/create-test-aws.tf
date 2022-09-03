@@ -115,8 +115,11 @@ resource "aws_instance" "for-docker-om-test" {
   instance_type = "t2.medium"
   #instance_type   = "t2.micro"
   key_name               = "mykeypairsergey"
-  vpc_security_group_ids = ["sg-045aa2f7aa7fe271d"]   #[ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]
-  subnet_id              = "subnet-07b2c20b11e01aeb6" # этот хардкод заменить
+  #security_groups = ["allow-all-ec2"]
+  vpc_security_group_ids =  ["sg-06d6411bf8b970d3f"]   #[ "sg-08742a368dd7643f6", "${aws_security_group.om-test-sg.id}" ]# delete hardcode!!!
+
+
+  subnet_id              = "subnet-07aa9fd8f0f3712d0" # delete hardcode!!!
   #user_data       = file("inst_docker.sh")
   user_data = <<EOF
 #!/bin/bash

@@ -101,12 +101,12 @@ jobs:
             uses: actions/checkout@v2
 
 
-          - name: install github cli
-            run: |
-              sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-              sudo apt-add-repository https://cli.github.com/packages
-              sudo apt update
-              sudo apt install gh
+          # - name: install github cli
+          #   run: |
+          #     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          #     sudo apt-add-repository https://cli.github.com/packages
+          #     sudo apt update
+          #     sudo apt install gh
 
         
           - name: Create Pull Request CLI
